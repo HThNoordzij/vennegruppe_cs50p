@@ -1,4 +1,3 @@
-import sys
 import argparse
 
 ## implement OOP
@@ -9,6 +8,15 @@ import argparse
 ## implement some scoring mechanism based on previous seen students and boy/girl ratio
 ## recursion of scoring x times, keep best scoring groups
 
+parser = argparse.ArgumentParser(
+                    prog='Vennegruppe',
+                    description='Create new groups of students based on previous groups and other parameters')
+
+parser.add_argument('-f', '--file') 
+parser.add_argument('-m', '--min', type=int, default=4, help='Minimum number of students per group') 
+parser.add_argument('-M', '--max', type=int, default=6, help='Maximum number of students per group')
+args = parser.parse_args()
+
 
 class Student:
     ...
@@ -18,7 +26,7 @@ class Group:
     ...
 
 def main():
-    ...
+    print(args.file)
 
 
 def new_groups(names):
