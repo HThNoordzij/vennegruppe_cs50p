@@ -17,6 +17,17 @@ def test_student_name_setter():
         student.name = ""
 
 
+def test_student_id_increment():
+    student1 = Student("Alice")
+    student2 = Student("Bob")
+    assert student2.id == student1.id + 1
+
+
+def test_student_str():
+    student = Student("Alice")
+    assert str(student) == f"Alice ({student.id})"
+
+
 def test_group_creation():
     group = Group(max_students=5, min_students=3)
     assert group.max_students == 5
@@ -31,3 +42,18 @@ def test_group_str():
     group.students.append(student1)
     group.students.append(student2)
     assert str(group) == f"Group {group.id}: Alice ({student1.id}), Bob ({student2.id})"
+
+
+def test_group_id_increment():
+    group1 = Group()
+    group2 = Group()
+    assert group2.id == group1.id + 1
+
+
+def test_group_students_list():
+    group = Group()
+    student1 = Student("Alice")
+    student2 = Student("Bob")
+    group.students.append(student1)
+    group.students.append(student2)
+    assert group.students == [student1, student2]
