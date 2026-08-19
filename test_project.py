@@ -9,6 +9,7 @@ from project import (
     score_groups,
     save_groups_to_csv,
     save_students_to_csv,
+    update_seen_students,
 )
 
 
@@ -70,11 +71,10 @@ def test_student_str():
 
 
 def test_student_seen_students():
-    student1 = Student("Alice")
-    student2 = Student("Bob")
-    student1.seen_students[student2.id] = 1
-    assert student2.id in student1.seen_students
-    assert student1.seen_students[student2.id] == 1
+    student = Student("Alice")
+    assert student.seen_students == []
+    student.add_seen_student("Bob")
+    assert "Bob" in student.seen_students
 
 
 def test_group_creation():
@@ -274,3 +274,24 @@ def test_save_students_to_csv(tmp_path):
         lines = file.readlines()
         assert lines[0].strip() == "name,gender,seen_students"
         assert len(lines) == 5  # Header + 4 students
+
+
+# Test case for update_seen_students function
+def test_update_seen_students():
+    students = [
+        Student("Alice", "F"),
+        Student("Bob", "M"),
+        Student("Charlie", "F"),
+        Student("Dylan", "M"),
+    ]
+    group_sizes = [2, 2]
+    groups = new_groups(students, group_sizes)
+
+    update_seen_students(groups)
+
+    # Check that each student has seen the other students in their group
+    for group in groups:
+        for student in group.students:
+            for other_student in group.students:
+                if student != other_student:
+                    assert other_student.name in student.seen_students

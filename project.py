@@ -21,8 +21,8 @@ class Student:
             Name of the student.
         gender : str
             Gender of the student, can be 'M', 'F', 'X', or None.
-        seen_students : dict
-            A dictionary to track how many times the student has seen other students.
+        seen_students : list
+            A list to track the students that the student has seen.
     """
 
     id = 1
@@ -32,7 +32,7 @@ class Student:
         Student.id += 1
         self.name = name
         self.gender = gender
-        self.seen_students = seen_students if seen_students is not None else {}
+        self.seen_students = seen_students if seen_students is not None else []
 
     def __str__(self):
         return f"{self.name} ({self.gender})"
@@ -56,6 +56,10 @@ class Student:
         if gender not in (None, "M", "F", "X"):
             raise ValueError("Gender must be 'M', 'F', 'X', or None")
         self._gender = gender
+
+    def add_seen_student(self, student_name):
+        """Adds a student to the seen_students list."""
+        self.seen_students.append(student_name)
 
 
 class Group:
@@ -139,11 +143,17 @@ def main(file, min_students, max_students, output_file, students_file):
     score = score_groups([], groups)
     print(f"\nScore of new groups: {score:.2f}")
 
+    """Update seen students."""
+    update_seen_students(groups)
+    print("\nUpdated 'seen_students' for each student.")
+
     """Save groups to CSV."""
     save_groups_to_csv(groups, output_file)
+    print(f"Saved groups to {output_file}")
 
     """Save students to CSV."""
     save_students_to_csv(sorted(students, key=lambda x: x.name), students_file)
+    print(f"Saved students to {students_file}")
 
     for group in groups:
         print(f"\nGroup {group.id} students:")
@@ -200,7 +210,7 @@ def read_students_from_csv(file_path):
                 Student(
                     name=row["name"],
                     gender=row["gender"],
-                    seen_students=row["seen_students"],
+                    seen_students=row["seen_students"].split(",") if row["seen_students"] else None,
                 )
             )
     return students
@@ -260,6 +270,13 @@ def score_groups(old, new):
 
     """Score new groups based on how many students have seen each other before."""
 
+def update_seen_students(new):
+    """Updates the seen_students attribute for each student in the new groups."""
+    for group in new:
+        for student in group.students:
+            for other_student in group.students:
+                if student != other_student:
+                    student.add_seen_student(other_student.name)
 
 def save_groups_to_csv(groups, file_path):
     """Saves the groups to a CSV file."""
@@ -277,7 +294,7 @@ def save_students_to_csv(students, file_path):
         writer = csv.writer(file)
         writer.writerow(["name", "gender", "seen_students"])
         for student in students:
-            writer.writerow([student.name, student.gender, student.seen_students])
+            writer.writerow([student.name, student.gender, ",".join(student.seen_students)])
 
 
 if __name__ == "__main__":
