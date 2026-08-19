@@ -1,11 +1,8 @@
-try:
-    import pytest
-except ImportError:
-    pytest = None
-
+import pytest
 from project import Student, Group
 
 
+# Test cases for Student and Group classes
 def test_student_creation():
     student = Student("Alice")
     assert student.name == "Alice"
@@ -30,6 +27,14 @@ def test_student_id_increment():
 def test_student_str():
     student = Student("Alice")
     assert str(student) == f"Alice ({student.id})"
+
+
+def test_student_seen_students():
+    student1 = Student("Alice")
+    student2 = Student("Bob")
+    student1.seen_students[student2.id] = 1
+    assert student2.id in student1.seen_students
+    assert student1.seen_students[student2.id] == 1
 
 
 def test_group_creation():
@@ -61,3 +66,23 @@ def test_group_students_list():
     group.students.append(student1)
     group.students.append(student2)
     assert group.students == [student1, student2]
+
+
+def test_group_max_students_setter():
+    group = Group()
+    with pytest.raises(ValueError):
+        group.max_students = -1
+    with pytest.raises(ValueError):
+        group.max_students = 0
+    with pytest.raises(ValueError):
+        group.max_students = "five"
+
+
+def test_group_min_students_setter():
+    group = Group()
+    with pytest.raises(ValueError):
+        group.min_students = -1
+    with pytest.raises(ValueError):
+        group.min_students = 0
+    with pytest.raises(ValueError):
+        group.min_students = "three"
