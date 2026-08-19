@@ -74,14 +74,25 @@ class Group:
 
     id = 1
 
-    def __init__(self, ratio=0):
+    def __init__(self, students=[], ratio=0):
         self.id = Group.id
         Group.id += 1
+        self.students = students
         self.ratio = ratio
-        self.students = []
 
     def __str__(self):
-        return f"Group {self.id}: {', '.join([str(s) for s in self.students])}"
+        return f"Group {self.id}, ratio: {self.ratio:.2f}: {', '.join([str(s) for s in self.students])}"
+
+    @property
+    def students(self):
+        return self._students
+
+    @students.setter
+    def students(self, students):
+        if not isinstance(students, list):
+            raise ValueError("Students must be a list")
+        self._students = students
+        self._ratio = self.calculate_ratio()
 
     @property
     def ratio(self):
@@ -92,6 +103,16 @@ class Group:
         if not isinstance(value, (int, float)) or value < 0 or value > 1:
             raise ValueError("Ratio must be between 0 and 1")
         self._ratio = value
+
+
+    def calculate_ratio(self):
+        """Calculates the gender ratio of the group."""
+        if not self.students:
+            return 0
+        female_count = sum(1 for s in self.students if s.gender == "F")
+        male_count = sum(1 for s in self.students if s.gender == "M")
+        total_count = female_count + male_count
+        return female_count / total_count if total_count > 0 else 0
 
 
 def main(file, min_students, max_students):

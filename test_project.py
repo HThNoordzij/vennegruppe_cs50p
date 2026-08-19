@@ -85,7 +85,7 @@ def test_group_str():
     student2 = Student("Bob")
     group.students.append(student1)
     group.students.append(student2)
-    assert str(group) == f"Group {group.id}: Alice ({student1.gender}), Bob ({student2.gender})"
+    assert str(group) == f"Group {group.id}, ratio: {group.ratio:.2f}: Alice ({student1.gender}), Bob ({student2.gender})"
 
 
 def test_group_id_increment():
@@ -98,9 +98,10 @@ def test_group_students_list():
     group = Group()
     student1 = Student("Alice")
     student2 = Student("Bob")
-    group.students.append(student1)
-    group.students.append(student2)
-    assert group.students == [student1, student2]
+    group.students = [student1, student2]
+    assert len(group.students) == 2
+    assert group.students[0] == student1
+    assert group.students[1] == student2
 
 
 def test_group_ratio_setter():
