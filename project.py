@@ -7,7 +7,6 @@ import sys
 
 ## create new groups based on previous groups and other parameters
 ## implement some scoring mechanism based on previous seen students and boy/girl ratio
-## recursion of scoring x times, keep best scoring groups
 
 
 class Student:
@@ -120,12 +119,17 @@ class Group:
 
 
 def main(file, iterations, min_students, max_students, output_file, students_file):
-    """Read and parse students."""
+    """Opening message."""
     print(
-        f"Start creating vennegrupper.\n\nFile with students: {file}, \
-            \nMinimum number of students per group: {min_students}, \
-            \nMaximum number of students per group: {max_students}\n"
+        f"Start creating vennegrupper.\n\nFile with students: {file} \
+            \nMinimum number of students per group: {min_students} \
+            \nMaximum number of students per group: {max_students} \
+            \nNumber of iterations: {iterations} \
+            \nOutput file for new groups: {output_file} \
+            \nOutput file for updated students: {students_file}\n"
     )
+
+    """Read and parse students."""
     students = read_students_from_csv(file)
     print(f"Read {len(students)} students from {file}")
 
@@ -145,8 +149,8 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
             best_score = score
             best_groups = groups
 
-    print(f"\nBest score after {iterations} iterations: {best_score:.2f}")
-    print(f"Best groups:\n")
+    print(f"\nBest score after {iterations} iterations: {best_score:.2f}\n")
+    print(f"Best groups:")
     for group in best_groups:
         print(group)
 
@@ -281,9 +285,16 @@ def score_groups(groups):
             ratio_score -= 1
         elif group.ratio < 0.4 or group.ratio > 0.6:
             ratio_score -= 0.5
-    return ratio_score / len(groups) if groups else 0
+    ratio_score = ratio_score / len(groups) if groups else 0
 
     """Score new groups based on how many students have seen each other before."""
+    seen_score = 0
+    for group in groups:
+        for student in group.students:
+            seen_score -= len(
+                [s for s in group.students if s.name in student.seen_students]
+            )
+    return ratio_score + seen_score
 
 
 def update_seen_students(new):
