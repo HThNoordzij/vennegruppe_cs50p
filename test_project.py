@@ -1,5 +1,5 @@
 import pytest
-from project import parse_arguments, Student, Group
+from project import parse_arguments, Student, Group, read_students_from_csv
 
 
 # Test cases for argument parsing
@@ -126,3 +126,24 @@ def test_group_ratio_setter():
         group.ratio = 1.1
     with pytest.raises(ValueError):
         group.ratio = "half"
+
+
+# Test cases for reading students from CSV
+def test_read_students_from_csv(tmp_path):
+    # Create a temporary CSV file
+    csv_file = tmp_path / "students.csv"
+    csv_file.write_text("name,gender\nAlice,F\nBob,M\nCharlie,X\n")
+
+    students = read_students_from_csv(str(csv_file))
+    assert len(students) == 3
+    assert students[0].name == "Alice"
+    assert students[0].gender == "F"
+
+
+def test_read_students_from_csv_invalid_gender(tmp_path):
+    # Create a temporary CSV file with an invalid gender
+    csv_file = tmp_path / "students.csv"
+    csv_file.write_text("name,gender\nAlice,F\nBob,Z\n")
+
+    with pytest.raises(ValueError):
+        read_students_from_csv(str(csv_file))

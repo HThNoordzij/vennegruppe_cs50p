@@ -1,5 +1,6 @@
 import argparse
 import sys
+import csv
 
 ## input must contain csv with students, initially only name and gender column, seen_students will be added when groups are created
 ## other inputs like previous groups? or min/max number of kids per group?
@@ -88,8 +89,10 @@ class Group:
         self._ratio = value
 
 
-def main(*args):
-    print("Arguments received:", args)
+def main(file, min_students, max_students):
+    print(f"Arguments received. File: {file}, Min: {min_students}, Max: {max_students}")
+    students = read_students_from_csv(file)
+    print(f"Read {len(students)} students from {file}")
 
 
 def parse_arguments(args):
@@ -116,6 +119,15 @@ def parse_arguments(args):
         help="Maximum number of students per group",
     )
     return parser.parse_args(args)
+
+
+def read_students_from_csv(file_path):
+    students = []
+    with open(file_path, "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            students.append(Student(name=row["name"], gender=row["gender"]))
+    return students
 
 
 def new_groups(names): ...
