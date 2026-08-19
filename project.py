@@ -143,25 +143,25 @@ def new_groups(students, min, max): ...
 def score_groups(old, new): ...
 
 
-def calculate_group_sizes(students, min, max):
+def calculate_group_sizes(n_students, min, max):
     if max <= min:
         raise ValueError(
             "Maximum cannot be less than or equal to minimum number of students per group."
         )
-    if students < min:
+    if n_students < min:
         raise ValueError(
             "Number of students cannot be less than the minimum number of students per group."
         )
 
-    num_groups = students // min
-    group_size = students // num_groups
+    num_groups = n_students // min
+    group_size = n_students // num_groups
 
     if group_size > max:
         num_groups += 1
-        group_size = students // num_groups
+        group_size = n_students // num_groups
 
     groups = [group_size] * num_groups
-    remaining_students = students % num_groups
+    remaining_students = n_students % num_groups
 
     for i in range(remaining_students):
         groups[i] += 1
