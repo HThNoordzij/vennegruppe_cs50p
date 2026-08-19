@@ -94,3 +94,13 @@ def test_group_min_students_setter():
         group.min_students = 0
     with pytest.raises(ValueError):
         group.min_students = "three"
+
+
+def test_group_ratio_setter():
+    group = Group()
+    with pytest.raises(ValueError):
+        group.ratio = -0.1
+    with pytest.raises(ValueError):
+        group.ratio = 1.1
+    with pytest.raises(ValueError):
+        group.ratio = "half"

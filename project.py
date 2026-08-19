@@ -45,11 +45,12 @@ class Student:
 class Group:
     id = 0
 
-    def __init__(self, max_students=6, min_students=4):
+    def __init__(self, max_students=6, min_students=4, ratio=None):
         self.id = Group.id
         Group.id += 1
         self.max_students = max_students
         self.min_students = min_students
+        self.ratio = ratio
         self.students = []
 
     def __str__(self):
@@ -74,6 +75,16 @@ class Group:
         if not isinstance(value, int) or value <= 0:
             raise ValueError("Minimum number of students must be a positive integer")
         self._min_students = value
+
+    @property
+    def ratio(self):
+        return self._ratio
+
+    @ratio.setter
+    def ratio(self, value):
+        if not isinstance(value, (int, float)) or value < 0 or value > 1:
+            raise ValueError("Ratio must be between 0 and 1")
+        self._ratio = value
 
 
 def main():
