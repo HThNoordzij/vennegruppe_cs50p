@@ -1,11 +1,9 @@
 import argparse
-import sys
 import csv
+import sys
 
-## input must contain csv with students, initially only name and gender column, seen_students will be added when groups are created
 ## other inputs like previous groups? or min/max number of kids per group?
-## student (name, gender and previous seen students)
-## group (id, students, max students, min students, boy/girl ratio)
+## create new groups based on previous groups and other parameters
 ## implement some scoring mechanism based on previous seen students and boy/girl ratio
 ## recursion of scoring x times, keep best scoring groups
 
@@ -13,12 +11,12 @@ import csv
 class Student:
     id = 0
 
-    def __init__(self, name, gender=None):
+    def __init__(self, name, gender=None, seen_students=None):
         self.id = Student.id
         Student.id += 1
         self.name = name
         self.gender = gender
-        self.seen_students = {}
+        self.seen_students = seen_students if seen_students is not None else {}
 
     def __str__(self):
         return f"{self.name} ({self.id})"
@@ -126,7 +124,7 @@ def read_students_from_csv(file_path):
     with open(file_path, "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            students.append(Student(name=row["name"], gender=row["gender"]))
+            students.append(Student(name=row["name"], gender=row["gender"], seen_students=row["seen_students"]))
     return students
 
 

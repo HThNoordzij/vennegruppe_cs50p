@@ -132,7 +132,7 @@ def test_group_ratio_setter():
 def test_read_students_from_csv(tmp_path):
     # Create a temporary CSV file
     csv_file = tmp_path / "students.csv"
-    csv_file.write_text("name,gender\nAlice,F\nBob,M\nCharlie,X\n")
+    csv_file.write_text("name,gender,seen_students\nAlice,F,\nBob,M,\nCharlie,X,\n")
 
     students = read_students_from_csv(str(csv_file))
     assert len(students) == 3
@@ -143,7 +143,7 @@ def test_read_students_from_csv(tmp_path):
 def test_read_students_from_csv_invalid_gender(tmp_path):
     # Create a temporary CSV file with an invalid gender
     csv_file = tmp_path / "students.csv"
-    csv_file.write_text("name,gender\nAlice,F\nBob,Z\n")
+    csv_file.write_text("name,gender,seen_students\nAlice,F,\nBob,Z,\n")
 
     with pytest.raises(ValueError):
         read_students_from_csv(str(csv_file))
