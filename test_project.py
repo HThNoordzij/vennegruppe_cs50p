@@ -75,9 +75,7 @@ def test_student_seen_students():
 
 
 def test_group_creation():
-    group = Group(max_students=5, min_students=3)
-    assert group.max_students == 5
-    assert group.min_students == 3
+    group = Group()
     assert group.students == []
 
 
@@ -103,26 +101,6 @@ def test_group_students_list():
     group.students.append(student1)
     group.students.append(student2)
     assert group.students == [student1, student2]
-
-
-def test_group_max_students_setter():
-    group = Group()
-    with pytest.raises(ValueError):
-        group.max_students = -1
-    with pytest.raises(ValueError):
-        group.max_students = 0
-    with pytest.raises(ValueError):
-        group.max_students = "five"
-
-
-def test_group_min_students_setter():
-    group = Group()
-    with pytest.raises(ValueError):
-        group.min_students = -1
-    with pytest.raises(ValueError):
-        group.min_students = 0
-    with pytest.raises(ValueError):
-        group.min_students = "three"
 
 
 def test_group_ratio_setter():

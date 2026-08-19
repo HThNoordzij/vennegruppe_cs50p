@@ -1,5 +1,6 @@
 import argparse
 import csv
+import random
 import sys
 
 ## other inputs like previous groups? or min/max number of kids per group?
@@ -45,36 +46,14 @@ class Student:
 class Group:
     id = 0
 
-    def __init__(self, max_students=6, min_students=4, ratio=0):
+    def __init__(self, ratio=0):
         self.id = Group.id
         Group.id += 1
-        self.max_students = max_students
-        self.min_students = min_students
         self.ratio = ratio
         self.students = []
 
     def __str__(self):
         return f"Group {self.id}: {', '.join([str(s) for s in self.students])}"
-
-    @property
-    def max_students(self):
-        return self._max_students
-
-    @max_students.setter
-    def max_students(self, value):
-        if not isinstance(value, int) or value <= 0:
-            raise ValueError("Maximum number of students must be a positive integer")
-        self._max_students = value
-
-    @property
-    def min_students(self):
-        return self._min_students
-
-    @min_students.setter
-    def min_students(self, value):
-        if not isinstance(value, int) or value <= 0:
-            raise ValueError("Minimum number of students must be a positive integer")
-        self._min_students = value
 
     @property
     def ratio(self):
