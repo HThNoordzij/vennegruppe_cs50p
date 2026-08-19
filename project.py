@@ -2,6 +2,9 @@ import argparse
 import csv
 import random
 import sys
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Student:
@@ -115,7 +118,12 @@ class Group:
 
 def main(file, iterations, min_students, max_students, output_file, students_file):
     """Opening message."""
-    print(
+    logging.basicConfig(
+        filename="vennegruppe.log",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+    logger.info(
         f"Start creating vennegrupper.\n\nFile with students: {file} \
             \nMinimum number of students per group: {min_students} \
             \nMaximum number of students per group: {max_students} \
@@ -126,12 +134,12 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
 
     """Read and parse students."""
     students = read_students_from_csv(file)
-    print(f"Read {len(students)} students from {file}")
+    logger.info(f"Read {len(students)} students from {file}")
 
     """Calculate group sizes."""
     group_sizes = calculate_group_sizes(len(students), min_students, max_students)
-    print(f"Number of groups: {len(group_sizes)}")
-    print(f"Group sizes: {group_sizes}\n")
+    logger.info(f"Number of groups: {len(group_sizes)}")
+    logger.info(f"Group sizes: {group_sizes}\n")
 
     """Recursively create and score groups, keeping the best scoring groups."""
     best_groups = None
@@ -140,28 +148,28 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
         groups = new_groups(students, group_sizes)
         score = score_groups(groups)
         if score > best_score:
-            print(f"New best score: {score:.2f}")
+            logger.info(f"New best score: {score:.2f}")
             best_score = score
             best_groups = groups
 
-    print(f"\nBest score after {iterations} iterations: {best_score:.2f}\n")
-    print(f"Best groups:")
+    logger.info(f"\nBest score after {iterations} iterations: {best_score:.2f}\n")
+    logger.info(f"Best groups:")
     for group in best_groups:
-        print(group)
+        logger.info(group)
 
     """Update seen students."""
     update_seen_students(best_groups)
-    print("\nUpdated 'seen_students' for each student.")
+    logger.info("\nUpdated 'seen_students' for each student.")
 
     """Save groups to CSV."""
     save_groups_to_csv(best_groups, output_file)
-    print(f"\nSaved groups to {output_file}")
+    logger.info(f"\nSaved groups to {output_file}")
 
     """Save students to CSV."""
     save_students_to_csv(sorted(students, key=lambda x: x.name), students_file)
-    print(f"Saved students to {students_file}")
+    logger.info(f"Saved students to {students_file}")
 
-    print("\nVennegrupper created successfully!")
+    logger.info("\nVennegrupper created successfully!")
 
 
 def parse_arguments(args):
