@@ -8,6 +8,7 @@ from project import (
     new_groups,
     score_groups,
     save_groups_to_csv,
+    save_students_to_csv,
 )
 
 
@@ -87,7 +88,10 @@ def test_group_str():
     student2 = Student("Bob")
     group.students.append(student1)
     group.students.append(student2)
-    assert str(group) == f"Group {group.id}, ratio: {group.ratio:.2f}: Alice ({student1.gender}), Bob ({student2.gender})"
+    assert (
+        str(group)
+        == f"Group {group.id}, ratio: {group.ratio:.2f}: Alice ({student1.gender}), Bob ({student2.gender})"
+    )
 
 
 def test_group_id_increment():
@@ -180,17 +184,28 @@ def test_new_groups():
 
 
 def test_new_groups_with_remaining_students():
-    students = [Student("Alice"), Student("Bob"), Student("Charlie"), Student("Dylan"), Student("Eli")]
+    students = [
+        Student("Alice"),
+        Student("Bob"),
+        Student("Charlie"),
+        Student("Dylan"),
+        Student("Eli"),
+    ]
     group_sizes = [3, 2]
     groups = new_groups(students, group_sizes)
     assert len(groups) == 2
     assert len(groups[0].students) == 3
-    assert len(groups[1].students) == 2 
+    assert len(groups[1].students) == 2
 
 
 # Test cases for score_groups function
 def test_score_groups():
-    students = [Student("Alice", "F"), Student("Bob", "M"), Student("Charlie", "F"), Student("Dylan", "M")]
+    students = [
+        Student("Alice", "F"),
+        Student("Bob", "M"),
+        Student("Charlie", "F"),
+        Student("Dylan", "M"),
+    ]
     group_sizes = [2, 2]
     groups = new_groups(students, group_sizes)
     score = score_groups([], groups)
@@ -198,13 +213,23 @@ def test_score_groups():
 
 
 def test_score_groups_edge_cases():
-    students = [Student("Alice", "F"), Student("Bob", "M"), Student("Charlie", "F"), Student("Dylan", "M")]
+    students = [
+        Student("Alice", "F"),
+        Student("Bob", "M"),
+        Student("Charlie", "F"),
+        Student("Dylan", "M"),
+    ]
     group_sizes = [4]
     groups = new_groups(students, group_sizes)
     score = score_groups([], groups)
     assert score == 0  # Perfect ratio
 
-    students = [Student("Alice", "F"), Student("Bob", "F"), Student("Charlie", "F"), Student("Dylan", "F")]
+    students = [
+        Student("Alice", "F"),
+        Student("Bob", "F"),
+        Student("Charlie", "F"),
+        Student("Dylan", "F"),
+    ]
     group_sizes = [4]
     groups = new_groups(students, group_sizes)
     score = score_groups([], groups)
@@ -213,7 +238,12 @@ def test_score_groups_edge_cases():
 
 # Test case for save_groups_to_csv function
 def test_save_groups_to_csv(tmp_path):
-    students = [Student("Alice", "F"), Student("Bob", "M"), Student("Charlie", "F"), Student("Dylan", "M")]
+    students = [
+        Student("Alice", "F"),
+        Student("Bob", "M"),
+        Student("Charlie", "F"),
+        Student("Dylan", "M"),
+    ]
     group_sizes = [2, 2]
     groups = new_groups(students, group_sizes)
 
@@ -224,4 +254,23 @@ def test_save_groups_to_csv(tmp_path):
     with open(csv_file, "r") as file:
         lines = file.readlines()
         assert lines[0].strip() == "Group ID,Student Name,Gender"
+        assert len(lines) == 5  # Header + 4 students
+
+
+# Test case for save_students_to_csv function
+def test_save_students_to_csv(tmp_path):
+    students = [
+        Student("Alice", "F"),
+        Student("Bob", "M"),
+        Student("Charlie", "F"),
+        Student("Dylan", "M"),
+    ]
+
+    csv_file = tmp_path / "new_students.csv"
+    save_students_to_csv(students, str(csv_file))
+
+    # Read the CSV file and check its contents
+    with open(csv_file, "r") as file:
+        lines = file.readlines()
+        assert lines[0].strip() == "name,gender,seen_students"
         assert len(lines) == 5  # Header + 4 students

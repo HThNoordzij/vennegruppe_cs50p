@@ -114,7 +114,7 @@ class Group:
         return female_count / total_count if total_count > 0 else 0
 
 
-def main(file, min_students, max_students, output_file):
+def main(file, min_students, max_students, output_file, students_file):
     """Read and parse students."""
     print(
         f"Start creating vennegrupper.\n\nFile with students: {file}, \
@@ -141,6 +141,9 @@ def main(file, min_students, max_students, output_file):
 
     """Save groups to CSV."""
     save_groups_to_csv(groups, output_file)
+
+    """Save students to CSV."""
+    save_students_to_csv(sorted(students, key=lambda x: x.name), students_file)
 
     for group in groups:
         print(f"\nGroup {group.id} students:")
@@ -173,7 +176,16 @@ def parse_arguments(args):
         help="Maximum number of students per group",
     )
     parser.add_argument(
-        "-o", "--output", default="new_groups.csv", help="Output CSV file for new groups"
+        "-o",
+        "--output",
+        default="new_groups.csv",
+        help="Output CSV file for new groups",
+    )
+    parser.add_argument(
+        "-s",
+        "--students",
+        default="new_students.csv",
+        help="Output CSV file for new students",
     )
     return parser.parse_args(args)
 
@@ -259,6 +271,21 @@ def save_groups_to_csv(groups, file_path):
                 writer.writerow([group.id, student.name, student.gender])
 
 
+def save_students_to_csv(students, file_path):
+    """Saves the students to a CSV file."""
+    with open(file_path, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["name", "gender", "seen_students"])
+        for student in students:
+            writer.writerow([student.name, student.gender, student.seen_students])
+
+
 if __name__ == "__main__":
     arguments = parse_arguments(sys.argv[1:])
-    main(arguments.file, arguments.min, arguments.max, arguments.output)
+    main(
+        arguments.file,
+        arguments.min,
+        arguments.max,
+        arguments.output,
+        arguments.students,
+    )
