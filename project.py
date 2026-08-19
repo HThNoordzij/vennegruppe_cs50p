@@ -95,16 +95,19 @@ class Group:
 
 
 def main(file, min_students, max_students):
-
     """Read and parse students."""
-    print(f"Arguments received. File: {file}, Min: {min_students}, Max: {max_students}")
+    print(
+        f"Start creating vennegrupper.\n\nFile with students: {file}, \
+            \nMinimum number of students per group: {min_students}, \
+            \nMaximum number of students per group: {max_students}\n"
+    )
     students = read_students_from_csv(file)
     print(f"Read {len(students)} students from {file}")
 
     """Calculate group sizes."""
     group_sizes = calculate_group_sizes(len(students), min_students, max_students)
     print(f"Number of groups: {len(group_sizes)}")
-    print(f"Group sizes: {group_sizes}")
+    print(f"Group sizes: {group_sizes}\n")
 
     """Create new groups."""
     groups = new_groups(students, group_sizes)
@@ -156,7 +159,7 @@ def read_students_from_csv(file_path):
     return students
 
 
-def new_groups(students, group_sizes): 
+def new_groups(students, group_sizes):
     """Creates new groups of students based on the provided group sizes."""
     random.shuffle(students)
     groups = []
