@@ -114,7 +114,7 @@ class Group:
         return female_count / total_count if total_count > 0 else 0
 
 
-def main(file, min_students, max_students):
+def main(file, min_students, max_students, output_file):
     """Read and parse students."""
     print(
         f"Start creating vennegrupper.\n\nFile with students: {file}, \
@@ -140,7 +140,7 @@ def main(file, min_students, max_students):
     print(f"\nScore of new groups: {score:.2f}")
 
     """Save groups to CSV."""
-    save_groups_to_csv(groups)
+    save_groups_to_csv(groups, output_file)
 
     for group in groups:
         print(f"\nGroup {group.id} students:")
@@ -171,6 +171,9 @@ def parse_arguments(args):
         default=6,
         choices=range(2, 20),
         help="Maximum number of students per group",
+    )
+    parser.add_argument(
+        "-o", "--output", default="new_groups.csv", help="Output CSV file for new groups"
     )
     return parser.parse_args(args)
 
@@ -246,11 +249,8 @@ def score_groups(old, new):
     """Score new groups based on how many students have seen each other before."""
 
 
-def save_groups_to_csv(groups, file_path = None):
+def save_groups_to_csv(groups, file_path):
     """Saves the groups to a CSV file."""
-    if file_path is None:
-        file_path = "new_groups.csv"
-        
     with open(file_path, "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Group ID", "Student Name", "Gender"])
@@ -261,4 +261,4 @@ def save_groups_to_csv(groups, file_path = None):
 
 if __name__ == "__main__":
     arguments = parse_arguments(sys.argv[1:])
-    main(arguments.file, arguments.min, arguments.max)
+    main(arguments.file, arguments.min, arguments.max, arguments.output)
