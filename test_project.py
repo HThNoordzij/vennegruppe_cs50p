@@ -1,5 +1,12 @@
 import pytest
-from project import parse_arguments, Student, Group, read_students_from_csv, calculate_group_sizes, new_groups
+from project import (
+    parse_arguments,
+    Student,
+    Group,
+    read_students_from_csv,
+    calculate_group_sizes,
+    new_groups,
+)
 
 
 # Test cases for argument parsing
@@ -169,12 +176,13 @@ def test_calculate_group_sizes_edge_cases():
     assert calculate_group_sizes(7, 4, 6) == [4, 3]
     assert calculate_group_sizes(8, 4, 6) == [4, 4]
 
+
 def test_calculate_group_sizes_invalid_cases():
     with pytest.raises(ValueError):
-        calculate_group_sizes(0, 4, 3) # no students
+        calculate_group_sizes(0, 4, 3)  # no students
     with pytest.raises(ValueError):
         calculate_group_sizes(10, 4, 3)  # max < min
     with pytest.raises(ValueError):
         calculate_group_sizes(10, 4, 4)  # max == min
     with pytest.raises(ValueError):
-        calculate_group_sizes(3,4,6)  # students < min
+        calculate_group_sizes(3, 4, 6)  # students < min
