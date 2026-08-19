@@ -6,6 +6,7 @@ from project import (
     read_students_from_csv,
     calculate_group_sizes,
     new_groups,
+    score_groups,
 )
 
 
@@ -185,3 +186,25 @@ def test_new_groups_with_remaining_students():
     assert len(groups[0].students) == 3
     assert len(groups[1].students) == 2 
 
+
+# Test cases for score_groups function
+def test_score_groups():
+    students = [Student("Alice", "F"), Student("Bob", "M"), Student("Charlie", "F"), Student("Dylan", "M")]
+    group_sizes = [2, 2]
+    groups = new_groups(students, group_sizes)
+    score = score_groups([], groups)
+    assert isinstance(score, float)
+
+
+def test_score_groups_edge_cases():
+    students = [Student("Alice", "F"), Student("Bob", "M"), Student("Charlie", "F"), Student("Dylan", "M")]
+    group_sizes = [4]
+    groups = new_groups(students, group_sizes)
+    score = score_groups([], groups)
+    assert score == 0  # Perfect ratio
+
+    students = [Student("Alice", "F"), Student("Bob", "F"), Student("Charlie", "F"), Student("Dylan", "F")]
+    group_sizes = [4]
+    groups = new_groups(students, group_sizes)
+    score = score_groups([], groups)
+    assert score < 0  # All same gender, should be penalized
