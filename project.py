@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 ## input must contain csv with students, initially only name and gender column, seen_students will be added when groups are created
 ## other inputs like previous groups? or min/max number of kids per group?
@@ -45,7 +46,7 @@ class Student:
 class Group:
     id = 0
 
-    def __init__(self, max_students=6, min_students=4, ratio=None):
+    def __init__(self, max_students=6, min_students=4, ratio=0):
         self.id = Group.id
         Group.id += 1
         self.max_students = max_students
@@ -87,7 +88,11 @@ class Group:
         self._ratio = value
 
 
-def main():
+def main(*args):
+    print("Arguments received:", args)
+
+
+def parse_arguments(args):
     parser = argparse.ArgumentParser(
         prog="Vennegruppe",
         description="Create new groups of students based on previous groups and other parameters",
@@ -95,13 +100,22 @@ def main():
 
     parser.add_argument("-f", "--file")
     parser.add_argument(
-        "-m", "--min", type=int, default=4, help="Minimum number of students per group"
+        "-m",
+        "--min",
+        type=int,
+        default=4,
+        choices=range(2, 20),
+        help="Minimum number of students per group",
     )
     parser.add_argument(
-        "-M", "--max", type=int, default=6, help="Maximum number of students per group"
+        "-M",
+        "--max",
+        type=int,
+        default=6,
+        choices=range(2, 20),
+        help="Maximum number of students per group",
     )
-    args = parser.parse_args()
-    print(args.file)
+    return parser.parse_args(args)
 
 
 def new_groups(names): ...
@@ -111,4 +125,5 @@ def score_groups(old, new): ...
 
 
 if __name__ == "__main__":
-    main()
+    arguments = parse_arguments(sys.argv[1:])
+    main(arguments.file, arguments.min, arguments.max)

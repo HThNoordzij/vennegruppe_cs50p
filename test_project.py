@@ -1,5 +1,27 @@
 import pytest
-from project import Student, Group
+from project import parse_arguments, Student, Group
+
+
+# Test cases for argument parsing
+def test_arguments_parsing():
+    args = parse_arguments(["-f", "students.csv", "-m", "4", "-M", "6"])
+    assert args.file == "students.csv"
+    assert args.min == 4
+    assert args.max == 6
+
+
+def test_arguments_parsing_defaults():
+    args = parse_arguments(["-f", "students.csv"])
+    assert args.file == "students.csv"
+    assert args.min == 4  # Default value
+    assert args.max == 6  # Default value
+
+
+def test_arguments_parsing_invalid_min_max():
+    with pytest.raises(SystemExit):
+        parse_arguments(["-f", "students.csv", "-m", "-1"])
+    with pytest.raises(SystemExit):
+        parse_arguments(["-f", "students.csv", "-M", "0"])
 
 
 # Test cases for Student and Group classes
