@@ -35,11 +35,11 @@ def test_arguments_parsing_invalid_min_max():
 def test_student_creation():
     student = Student("Alice")
     assert student.name == "Alice"
-    assert student.id == 0
+    assert student.id == 1
     assert student.gender is None
     student2 = Student("Bob")
     assert student2.name == "Bob"
-    assert student2.id == 1
+    assert student2.id == 2
     assert student2.gender is None
 
 
@@ -63,7 +63,7 @@ def test_student_id_increment():
 
 def test_student_str():
     student = Student("Alice")
-    assert str(student) == f"Alice ({student.id})"
+    assert str(student) == f"Alice ({student.gender})"
 
 
 def test_student_seen_students():
@@ -85,7 +85,7 @@ def test_group_str():
     student2 = Student("Bob")
     group.students.append(student1)
     group.students.append(student2)
-    assert str(group) == f"Group {group.id}: Alice ({student1.id}), Bob ({student2.id})"
+    assert str(group) == f"Group {group.id}: Alice ({student1.gender}), Bob ({student2.gender})"
 
 
 def test_group_id_increment():
@@ -164,3 +164,23 @@ def test_calculate_group_sizes_invalid_cases():
         calculate_group_sizes(10, 4, 4)  # max == min
     with pytest.raises(ValueError):
         calculate_group_sizes(3, 4, 6)  # students < min
+
+
+# Test cases for new_groups function
+def test_new_groups():
+    students = [Student("Alice"), Student("Bob"), Student("Charlie"), Student("Dylan")]
+    group_sizes = [2, 2]
+    groups = new_groups(students, group_sizes)
+    assert len(groups) == 2
+    assert len(groups[0].students) == 2
+    assert len(groups[1].students) == 2
+
+
+def test_new_groups_with_remaining_students():
+    students = [Student("Alice"), Student("Bob"), Student("Charlie"), Student("Dylan"), Student("Eli")]
+    group_sizes = [3, 2]
+    groups = new_groups(students, group_sizes)
+    assert len(groups) == 2
+    assert len(groups[0].students) == 3
+    assert len(groups[1].students) == 2 
+

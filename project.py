@@ -3,7 +3,7 @@ import csv
 import random
 import sys
 
-## other inputs like previous groups? or min/max number of kids per group?
+
 ## create new groups based on previous groups and other parameters
 ## implement some scoring mechanism based on previous seen students and boy/girl ratio
 ## recursion of scoring x times, keep best scoring groups
@@ -25,7 +25,7 @@ class Student:
             A dictionary to track how many times the student has seen other students.
     """
 
-    id = 0
+    id = 1
 
     def __init__(self, name, gender=None, seen_students=None):
         self.id = Student.id
@@ -35,7 +35,7 @@ class Student:
         self.seen_students = seen_students if seen_students is not None else {}
 
     def __str__(self):
-        return f"{self.name} ({self.id})"
+        return f"{self.name} ({self.gender})"
 
     @property
     def name(self):
@@ -72,7 +72,7 @@ class Group:
             List of Student objects in the group.
     """
 
-    id = 0
+    id = 1
 
     def __init__(self, ratio=0):
         self.id = Group.id
@@ -96,12 +96,21 @@ class Group:
 
 def main(file, min_students, max_students):
 
+    """Read and parse students."""
     print(f"Arguments received. File: {file}, Min: {min_students}, Max: {max_students}")
     students = read_students_from_csv(file)
     print(f"Read {len(students)} students from {file}")
+
+    """Calculate group sizes."""
     group_sizes = calculate_group_sizes(len(students), min_students, max_students)
     print(f"Number of groups: {len(group_sizes)}")
     print(f"Group sizes: {group_sizes}")
+
+    """Create new groups."""
+    groups = new_groups(students, group_sizes)
+    print(f"Created {len(groups)} groups:")
+    for group in groups:
+        print(group)
 
 
 def parse_arguments(args):
@@ -147,7 +156,17 @@ def read_students_from_csv(file_path):
     return students
 
 
-def new_groups(students, min, max): ...
+def new_groups(students, group_sizes): 
+    """Creates new groups of students based on the provided group sizes."""
+    random.shuffle(students)
+    groups = []
+    index = 0
+    for size in group_sizes:
+        group = Group()
+        group.students = students[index : index + size]
+        groups.append(group)
+        index += size
+    return groups
 
 
 def score_groups(old, new): ...
