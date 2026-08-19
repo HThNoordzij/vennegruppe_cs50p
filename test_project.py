@@ -208,7 +208,7 @@ def test_score_groups():
     ]
     group_sizes = [2, 2]
     groups = new_groups(students, group_sizes)
-    score = score_groups([], groups)
+    score = score_groups(groups)
     assert isinstance(score, float)
 
 
@@ -221,7 +221,7 @@ def test_score_groups_edge_cases():
     ]
     group_sizes = [4]
     groups = new_groups(students, group_sizes)
-    score = score_groups([], groups)
+    score = score_groups(groups)
     assert score == 0  # Perfect ratio
 
     students = [
@@ -232,7 +232,7 @@ def test_score_groups_edge_cases():
     ]
     group_sizes = [4]
     groups = new_groups(students, group_sizes)
-    score = score_groups([], groups)
+    score = score_groups(groups)
     assert score < 0  # All same gender, should be penalized
 
 

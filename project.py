@@ -1,5 +1,6 @@
 import argparse
 import csv
+from hashlib import new
 import random
 import sys
 
@@ -118,7 +119,7 @@ class Group:
         return female_count / total_count if total_count > 0 else 0
 
 
-def main(file, min_students, max_students, output_file, students_file):
+def main(file, iterations, min_students, max_students, output_file, students_file):
     """Read and parse students."""
     print(
         f"Start creating vennegrupper.\n\nFile with students: {file}, \
@@ -133,32 +134,35 @@ def main(file, min_students, max_students, output_file, students_file):
     print(f"Number of groups: {len(group_sizes)}")
     print(f"Group sizes: {group_sizes}\n")
 
-    """Create new groups."""
-    groups = new_groups(students, group_sizes)
-    print(f"Created {len(groups)} groups:")
-    for group in groups:
+    """Recursively create and score groups, keeping the best scoring groups."""
+    best_groups = None
+    best_score = float("-inf")
+    for _ in range(iterations):
+        groups = new_groups(students, group_sizes)
+        score = score_groups(groups)
+        if score > best_score:
+            print(f"New best score: {score:.2f}")
+            best_score = score
+            best_groups = groups
+
+    print(f"\nBest score after {iterations} iterations: {best_score:.2f}")
+    print(f"Best groups:\n")
+    for group in best_groups:
         print(group)
 
-    """Score new groups."""
-    score = score_groups([], groups)
-    print(f"\nScore of new groups: {score:.2f}")
-
     """Update seen students."""
-    update_seen_students(groups)
+    update_seen_students(best_groups)
     print("\nUpdated 'seen_students' for each student.")
 
     """Save groups to CSV."""
-    save_groups_to_csv(groups, output_file)
-    print(f"Saved groups to {output_file}")
+    save_groups_to_csv(best_groups, output_file)
+    print(f"\nSaved groups to {output_file}")
 
     """Save students to CSV."""
     save_students_to_csv(sorted(students, key=lambda x: x.name), students_file)
     print(f"Saved students to {students_file}")
 
-    for group in groups:
-        print(f"\nGroup {group.id} students:")
-        for student in group.students:
-            print(f"{student.name} ({student.gender})")
+    print("\nVennegrupper created successfully!")
 
 
 def parse_arguments(args):
@@ -169,6 +173,13 @@ def parse_arguments(args):
     )
 
     parser.add_argument("-f", "--file")
+    parser.add_argument(
+        "-i",
+        "--iterations",
+        type=int,
+        default=100,
+        help="Number of iterations for group creation and scoring",
+    )
     parser.add_argument(
         "-m",
         "--min",
@@ -210,7 +221,11 @@ def read_students_from_csv(file_path):
                 Student(
                     name=row["name"],
                     gender=row["gender"],
-                    seen_students=row["seen_students"].split(",") if row["seen_students"] else None,
+                    seen_students=(
+                        row["seen_students"].split(",")
+                        if row["seen_students"]
+                        else None
+                    ),
                 )
             )
     return students
@@ -256,19 +271,20 @@ def new_groups(students, group_sizes):
     return groups
 
 
-def score_groups(old, new):
+def score_groups(groups):
     """Score new groups based on gender ratio."""
     ratio_score = 0
-    for group in new:
+    for group in groups:
         if group.ratio < 0.2 or group.ratio > 0.8:
             ratio_score -= 2
         elif group.ratio < 0.3 or group.ratio > 0.7:
             ratio_score -= 1
         elif group.ratio < 0.4 or group.ratio > 0.6:
             ratio_score -= 0.5
-    return ratio_score / len(new) if new else 0
+    return ratio_score / len(groups) if groups else 0
 
     """Score new groups based on how many students have seen each other before."""
+
 
 def update_seen_students(new):
     """Updates the seen_students attribute for each student in the new groups."""
@@ -277,6 +293,7 @@ def update_seen_students(new):
             for other_student in group.students:
                 if student != other_student:
                     student.add_seen_student(other_student.name)
+
 
 def save_groups_to_csv(groups, file_path):
     """Saves the groups to a CSV file."""
@@ -294,13 +311,16 @@ def save_students_to_csv(students, file_path):
         writer = csv.writer(file)
         writer.writerow(["name", "gender", "seen_students"])
         for student in students:
-            writer.writerow([student.name, student.gender, ",".join(student.seen_students)])
+            writer.writerow(
+                [student.name, student.gender, ",".join(student.seen_students)]
+            )
 
 
 if __name__ == "__main__":
     arguments = parse_arguments(sys.argv[1:])
     main(
         arguments.file,
+        arguments.iterations,
         arguments.min,
         arguments.max,
         arguments.output,
