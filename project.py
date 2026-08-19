@@ -1,12 +1,7 @@
 import argparse
 import csv
-from hashlib import new
 import random
 import sys
-
-
-## create new groups based on previous groups and other parameters
-## implement some scoring mechanism based on previous seen students and boy/girl ratio
 
 
 class Student:
