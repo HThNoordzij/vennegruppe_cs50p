@@ -135,10 +135,17 @@ def main(file, min_students, max_students):
     for group in groups:
         print(group)
 
-
     """Score new groups."""
     score = score_groups([], groups)
     print(f"\nScore of new groups: {score:.2f}")
+
+    """Save groups to CSV."""
+    save_groups_to_csv(groups)
+
+    for group in groups:
+        print(f"\nGroup {group.id} students:")
+        for student in group.students:
+            print(f"{student.name} ({student.gender})")
 
 
 def parse_arguments(args):
@@ -184,6 +191,33 @@ def read_students_from_csv(file_path):
     return students
 
 
+def calculate_group_sizes(n_students, min, max):
+    """Calculates the sizes of groups based on the number of students and min/max constraints."""
+    if max <= min:
+        raise ValueError(
+            "Maximum cannot be less than or equal to minimum number of students per group."
+        )
+    if n_students < min:
+        raise ValueError(
+            "Number of students cannot be less than the minimum number of students per group."
+        )
+
+    num_groups = n_students // min
+    group_size = n_students // num_groups
+
+    if group_size > max:
+        num_groups += 1
+        group_size = n_students // num_groups
+
+    groups = [group_size] * num_groups
+    remaining_students = n_students % num_groups
+
+    for i in range(remaining_students):
+        groups[i] += 1
+
+    return groups
+
+
 def new_groups(students, group_sizes):
     """Creates new groups of students based on the provided group sizes."""
     random.shuffle(students)
@@ -212,31 +246,17 @@ def score_groups(old, new):
     """Score new groups based on how many students have seen each other before."""
 
 
-def calculate_group_sizes(n_students, min, max):
-    """Calculates the sizes of groups based on the number of students and min/max constraints."""
-    if max <= min:
-        raise ValueError(
-            "Maximum cannot be less than or equal to minimum number of students per group."
-        )
-    if n_students < min:
-        raise ValueError(
-            "Number of students cannot be less than the minimum number of students per group."
-        )
-
-    num_groups = n_students // min
-    group_size = n_students // num_groups
-
-    if group_size > max:
-        num_groups += 1
-        group_size = n_students // num_groups
-
-    groups = [group_size] * num_groups
-    remaining_students = n_students % num_groups
-
-    for i in range(remaining_students):
-        groups[i] += 1
-
-    return groups
+def save_groups_to_csv(groups, file_path = None):
+    """Saves the groups to a CSV file."""
+    if file_path is None:
+        file_path = "new_groups.csv"
+        
+    with open(file_path, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Group ID", "Student Name", "Gender"])
+        for group in groups:
+            for student in group.students:
+                writer.writerow([group.id, student.name, student.gender])
 
 
 if __name__ == "__main__":

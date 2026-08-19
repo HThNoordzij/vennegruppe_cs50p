@@ -7,6 +7,7 @@ from project import (
     calculate_group_sizes,
     new_groups,
     score_groups,
+    save_groups_to_csv,
 )
 
 
@@ -208,3 +209,19 @@ def test_score_groups_edge_cases():
     groups = new_groups(students, group_sizes)
     score = score_groups([], groups)
     assert score < 0  # All same gender, should be penalized
+
+
+# Test case for save_groups_to_csv function
+def test_save_groups_to_csv(tmp_path):
+    students = [Student("Alice", "F"), Student("Bob", "M"), Student("Charlie", "F"), Student("Dylan", "M")]
+    group_sizes = [2, 2]
+    groups = new_groups(students, group_sizes)
+
+    csv_file = tmp_path / "new_groups.csv"
+    save_groups_to_csv(groups, str(csv_file))
+
+    # Read the CSV file and check its contents
+    with open(csv_file, "r") as file:
+        lines = file.readlines()
+        assert lines[0].strip() == "Group ID,Student Name,Gender"
+        assert len(lines) == 5  # Header + 4 students
