@@ -1,8 +1,8 @@
 import argparse
 
-## input must contain csv with students
+## input must contain csv with students, initially only name and gender column, seen_students will be added when groups are created
 ## other inputs like previous groups? or min/max number of kids per group?
-## student (name, grade, current group and previous seen students)
+## student (name, gender and previous seen students)
 ## group (id, students, max students, min students, boy/girl ratio)
 ## implement some scoring mechanism based on previous seen students and boy/girl ratio
 ## recursion of scoring x times, keep best scoring groups
@@ -11,10 +11,11 @@ import argparse
 class Student:
     id = 0
 
-    def __init__(self, name):
+    def __init__(self, name, gender=None):
         self.id = Student.id
         Student.id += 1
         self.name = name
+        self.gender = gender
         self.seen_students = {}
 
     def __str__(self):
@@ -29,6 +30,16 @@ class Student:
         if not name:
             raise ValueError("Missing name")
         self._name = name
+
+    @property
+    def gender(self):
+        return self._gender
+
+    @gender.setter
+    def gender(self, gender):
+        if gender not in (None, "M", "F", "X"):
+            raise ValueError("Gender must be 'M', 'F', 'X', or None")
+        self._gender = gender
 
 
 class Group:

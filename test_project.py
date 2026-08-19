@@ -7,15 +7,23 @@ def test_student_creation():
     student = Student("Alice")
     assert student.name == "Alice"
     assert student.id == 0
+    assert student.gender is None
     student2 = Student("Bob")
     assert student2.name == "Bob"
     assert student2.id == 1
+    assert student2.gender is None
 
 
 def test_student_name_setter():
     student = Student("Alice")
     with pytest.raises(ValueError):
         student.name = ""
+
+
+def test_student_gender_setter():
+    student = Student("Alice")
+    with pytest.raises(ValueError):
+        student.gender = "Invalid"
 
 
 def test_student_id_increment():
