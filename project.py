@@ -10,6 +10,21 @@ import sys
 
 
 class Student:
+    """
+    A class to represent a student.
+
+    Attributes
+    ----------
+        id :int
+            Unique identifier for the student.
+        name : str
+            Name of the student.
+        gender : str
+            Gender of the student, can be 'M', 'F', 'X', or None.
+        seen_students : dict
+            A dictionary to track how many times the student has seen other students.
+    """
+
     id = 0
 
     def __init__(self, name, gender=None, seen_students=None):
@@ -44,6 +59,19 @@ class Student:
 
 
 class Group:
+    """
+    A class to represent a group of students.
+
+    Attributes
+    ----------
+        id : int
+            Unique identifier for the group.
+        ratio : float
+            Optional gender ratio for the group.
+        students : list
+            List of Student objects in the group.
+    """
+
     id = 0
 
     def __init__(self, ratio=0):
@@ -67,6 +95,7 @@ class Group:
 
 
 def main(file, min_students, max_students):
+
     print(f"Arguments received. File: {file}, Min: {min_students}, Max: {max_students}")
     students = read_students_from_csv(file)
     print(f"Read {len(students)} students from {file}")
@@ -76,6 +105,7 @@ def main(file, min_students, max_students):
 
 
 def parse_arguments(args):
+    """Parses command-line arguments."""
     parser = argparse.ArgumentParser(
         prog="Vennegruppe",
         description="Create new groups of students based on previous groups and other parameters",
@@ -102,6 +132,7 @@ def parse_arguments(args):
 
 
 def read_students_from_csv(file_path):
+    """Reads students from a CSV file and returns a list of Student objects."""
     students = []
     with open(file_path, "r") as file:
         reader = csv.DictReader(file)
@@ -123,6 +154,7 @@ def score_groups(old, new): ...
 
 
 def calculate_group_sizes(n_students, min, max):
+    """Calculates the sizes of groups based on the number of students and min/max constraints."""
     if max <= min:
         raise ValueError(
             "Maximum cannot be less than or equal to minimum number of students per group."
