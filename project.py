@@ -91,6 +91,9 @@ def main(file, min_students, max_students):
     print(f"Arguments received. File: {file}, Min: {min_students}, Max: {max_students}")
     students = read_students_from_csv(file)
     print(f"Read {len(students)} students from {file}")
+    group_sizes = calculate_group_sizes(len(students), min_students, max_students)
+    print(f"Number of groups: {len(group_sizes)}")
+    print(f"Group sizes: {group_sizes}")
 
 
 def parse_arguments(args):
@@ -124,14 +127,46 @@ def read_students_from_csv(file_path):
     with open(file_path, "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            students.append(Student(name=row["name"], gender=row["gender"], seen_students=row["seen_students"]))
+            students.append(
+                Student(
+                    name=row["name"],
+                    gender=row["gender"],
+                    seen_students=row["seen_students"],
+                )
+            )
     return students
 
 
-def new_groups(names): ...
+def new_groups(students, min, max): ...
 
 
 def score_groups(old, new): ...
+
+
+def calculate_group_sizes(students, min, max):
+    if max <= min:
+        raise ValueError(
+            "Maximum cannot be less than or equal to minimum number of students per group."
+        )
+    if students < min:
+        raise ValueError(
+            "Number of students cannot be less than the minimum number of students per group."
+        )
+
+    num_groups = students // min
+    group_size = students // num_groups
+
+    if group_size > max:
+        num_groups += 1
+        group_size = students // num_groups
+
+    groups = [group_size] * num_groups
+    remaining_students = students % num_groups
+
+    for i in range(remaining_students):
+        groups[i] += 1
+
+    return groups
 
 
 if __name__ == "__main__":

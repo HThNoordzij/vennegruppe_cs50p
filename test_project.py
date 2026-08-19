@@ -1,5 +1,5 @@
 import pytest
-from project import parse_arguments, Student, Group, read_students_from_csv
+from project import parse_arguments, Student, Group, read_students_from_csv, calculate_group_sizes, new_groups
 
 
 # Test cases for argument parsing
@@ -147,3 +147,34 @@ def test_read_students_from_csv_invalid_gender(tmp_path):
 
     with pytest.raises(ValueError):
         read_students_from_csv(str(csv_file))
+
+
+# Test cases for calculate_group_sizes function
+def test_calculate_group_sizes():
+    assert calculate_group_sizes(10, 4, 6) == [5, 5]
+    assert calculate_group_sizes(11, 4, 6) == [6, 5]
+    assert calculate_group_sizes(12, 4, 6) == [4, 4, 4]
+    assert calculate_group_sizes(13, 4, 6) == [5, 4, 4]
+    assert calculate_group_sizes(14, 4, 6) == [5, 5, 4]
+    assert calculate_group_sizes(15, 4, 6) == [5, 5, 5]
+    assert calculate_group_sizes(16, 4, 6) == [4, 4, 4, 4]
+    assert calculate_group_sizes(17, 4, 6) == [5, 4, 4, 4]
+    assert calculate_group_sizes(18, 4, 6) == [5, 5, 4, 4]
+
+
+def test_calculate_group_sizes_edge_cases():
+    assert calculate_group_sizes(4, 4, 6) == [4]
+    assert calculate_group_sizes(5, 4, 6) == [5]
+    assert calculate_group_sizes(6, 4, 6) == [6]
+    assert calculate_group_sizes(7, 4, 6) == [4, 3]
+    assert calculate_group_sizes(8, 4, 6) == [4, 4]
+
+def test_calculate_group_sizes_invalid_cases():
+    with pytest.raises(ValueError):
+        calculate_group_sizes(0, 4, 3) # no students
+    with pytest.raises(ValueError):
+        calculate_group_sizes(10, 4, 3)  # max < min
+    with pytest.raises(ValueError):
+        calculate_group_sizes(10, 4, 4)  # max == min
+    with pytest.raises(ValueError):
+        calculate_group_sizes(3,4,6)  # students < min
