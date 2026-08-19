@@ -104,7 +104,6 @@ class Group:
             raise ValueError("Ratio must be between 0 and 1")
         self._ratio = value
 
-
     def calculate_ratio(self):
         """Calculates the gender ratio of the group."""
         if not self.students:
@@ -135,6 +134,11 @@ def main(file, min_students, max_students):
     print(f"Created {len(groups)} groups:")
     for group in groups:
         print(group)
+
+
+    """Score new groups."""
+    score = score_groups([], groups)
+    print(f"\nScore of new groups: {score:.2f}")
 
 
 def parse_arguments(args):
@@ -193,7 +197,19 @@ def new_groups(students, group_sizes):
     return groups
 
 
-def score_groups(old, new): ...
+def score_groups(old, new):
+    """Score new groups based on gender ratio."""
+    ratio_score = 0
+    for group in new:
+        if group.ratio < 0.2 or group.ratio > 0.8:
+            ratio_score -= 2
+        elif group.ratio < 0.3 or group.ratio > 0.7:
+            ratio_score -= 1
+        elif group.ratio < 0.4 or group.ratio > 0.6:
+            ratio_score -= 0.5
+    return ratio_score / len(new) if new else 0
+
+    """Score new groups based on how many students have seen each other before."""
 
 
 def calculate_group_sizes(n_students, min, max):
