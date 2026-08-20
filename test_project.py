@@ -15,17 +15,38 @@ from project import (
 
 # Test cases for argument parsing
 def test_arguments_parsing():
-    args = parse_arguments(["-f", "students.csv", "-m", "4", "-M", "6"])
+    args = parse_arguments(
+        [
+            "-f",
+            "students.csv",
+            "-m",
+            "5",
+            "-M",
+            "7",
+            "-i",
+            "1000",
+            "-o",
+            "2026_groups.csv",
+            "-s",
+            "2026_students.csv",
+        ]
+    )
     assert args.file == "students.csv"
-    assert args.min == 4
-    assert args.max == 6
+    assert args.min == 5
+    assert args.max == 7
+    assert args.iterations == 1000
+    assert args.output == "2026_groups.csv"
+    assert args.students == "2026_students.csv"
 
 
 def test_arguments_parsing_defaults():
     args = parse_arguments(["-f", "students.csv"])
     assert args.file == "students.csv"
-    assert args.min == 4  # Default value
-    assert args.max == 6  # Default value
+    assert args.min == 4
+    assert args.max == 6
+    assert args.iterations == 100
+    assert args.output == "new_groups.csv"
+    assert args.students == "new_students.csv"
 
 
 def test_arguments_parsing_invalid_min_max():
@@ -49,12 +70,16 @@ def test_student_creation():
 
 def test_student_name_setter():
     student = Student("Alice")
+    student.name = "Alice R"
+    assert student.name == "Alice R"
     with pytest.raises(ValueError):
         student.name = ""
 
 
 def test_student_gender_setter():
     student = Student("Alice")
+    student.gender = "F"
+    assert student.gender == "F"
     with pytest.raises(ValueError):
         student.gender = "Invalid"
 
@@ -222,7 +247,7 @@ def test_score_groups_edge_cases():
     group_sizes = [4]
     groups = new_groups(students, group_sizes)
     score = score_groups(groups)
-    assert score == 0  # Perfect ratio
+    assert score == 0
 
     students = [
         Student("Alice", "F"),
@@ -233,7 +258,7 @@ def test_score_groups_edge_cases():
     group_sizes = [4]
     groups = new_groups(students, group_sizes)
     score = score_groups(groups)
-    assert score < 0  # All same gender, should be penalized
+    assert score < 0
 
 
 # Test case for save_groups_to_csv function
@@ -254,7 +279,7 @@ def test_save_groups_to_csv(tmp_path):
     with open(csv_file, "r") as file:
         lines = file.readlines()
         assert lines[0].strip() == "Group ID,Student Name,Gender"
-        assert len(lines) == 5  # Header + 4 students
+        assert len(lines) == 5
 
 
 # Test case for save_students_to_csv function
@@ -273,7 +298,7 @@ def test_save_students_to_csv(tmp_path):
     with open(csv_file, "r") as file:
         lines = file.readlines()
         assert lines[0].strip() == "name,gender,seen_students"
-        assert len(lines) == 5  # Header + 4 students
+        assert len(lines) == 5
 
 
 # Test case for update_seen_students function

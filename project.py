@@ -13,7 +13,7 @@ class Student:
 
     Attributes
     ----------
-        id :int
+        id : int
             Unique identifier for the student.
         name : str
             Name of the student.
@@ -121,7 +121,7 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
     logging.basicConfig(
         filename="vennegruppe.log",
         level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s"
+        format="%(asctime)s - %(levelname)s - %(message)s",
     )
     logger.info(
         f"Start creating vennegrupper.\n\nFile with students: {file} \
@@ -141,7 +141,19 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
     logger.info(f"Number of groups: {len(group_sizes)}")
     logger.info(f"Group sizes: {group_sizes}\n")
 
-    """Recursively create and score groups, keeping the best scoring groups."""
+    """Iteratively create and score groups, keeping the best scoring groups."""
+    logger.info(f"Randomizing the order of students, creating unique groups.\n")
+
+    logger.info("Scoring the girl/boy ratio per group.")
+    logger.info("-2 points when ratio is less than 20/80.")
+    logger.info("-1 points when ratio is less than 30/70.")
+    logger.info("-0.5 points when ratio is less than 40/60.\n")
+
+    logger.info("Scoring groups based on previous seen students within one group.")
+    logger.info(
+        "-1 point per previously seen student (aka -2, since it goes both ways).\n"
+    )
+
     best_groups = None
     best_score = float("-inf")
     for _ in range(iterations):
@@ -159,17 +171,17 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
 
     """Update seen students."""
     update_seen_students(best_groups)
-    logger.info("\nUpdated 'seen_students' for each student.")
+    logger.info("Updated 'seen_students' for each student.")
 
     """Save groups to CSV."""
     save_groups_to_csv(best_groups, output_file)
-    logger.info(f"\nSaved groups to {output_file}")
+    logger.info(f"Saved groups to {output_file}")
 
     """Save students to CSV."""
     save_students_to_csv(sorted(students, key=lambda x: x.name), students_file)
     logger.info(f"Saved students to {students_file}")
 
-    logger.info("\nVennegrupper created successfully!")
+    logger.info("Vennegrupper created successfully!")
 
 
 def parse_arguments(args):
@@ -179,7 +191,12 @@ def parse_arguments(args):
         description="Create new groups of students based on previous groups and other parameters",
     )
 
-    parser.add_argument("-f", "--file")
+    parser.add_argument(
+        "-f",
+        "--file",
+        help="Input CSV file with students (name, gender, seen_students)",
+        required=True,
+    )
     parser.add_argument(
         "-i",
         "--iterations",
@@ -213,7 +230,7 @@ def parse_arguments(args):
         "-s",
         "--students",
         default="new_students.csv",
-        help="Output CSV file for new students",
+        help="Output CSV file for updated students",
     )
     return parser.parse_args(args)
 
@@ -223,6 +240,7 @@ def read_students_from_csv(file_path):
     students = []
     with open(file_path, "r") as file:
         reader = csv.DictReader(file)
+        logger.info(f"Reading students from {file_path}")
         for row in reader:
             students.append(
                 Student(
@@ -248,6 +266,10 @@ def calculate_group_sizes(n_students, min, max):
         raise ValueError(
             "Number of students cannot be less than the minimum number of students per group."
         )
+
+    logger.info(
+        f"Calculating group sizes for {n_students} students, with {min} - {max} per group."
+    )
 
     num_groups = n_students // min
     group_size = n_students // num_groups
@@ -302,6 +324,10 @@ def score_groups(groups):
 
 def update_seen_students(new):
     """Updates the seen_students attribute for each student in the new groups."""
+    logger.info(
+        "Add current group members to 'seen_student' attribute for each Student."
+    )
+
     for group in new:
         for student in group.students:
             for other_student in group.students:
