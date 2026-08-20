@@ -164,7 +164,7 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
             best_score = score
             best_groups = groups
 
-    logger.info(f"\nBest score after {iterations} iterations: {best_score:.2f}\n")
+    logger.info(f"Best score after {iterations} iterations: {best_score:.2f}\n")
     logger.info(f"Best groups:")
     for group in best_groups:
         logger.info(group)
