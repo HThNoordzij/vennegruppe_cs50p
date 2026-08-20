@@ -2,6 +2,8 @@
 
 By Hanna Noordzij
 
+Reviewed by Therese Strand
+
 #### Description:
 A Python script to create new friend groups (vennegruppe). 
 
