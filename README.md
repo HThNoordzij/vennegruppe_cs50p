@@ -3,29 +3,37 @@
 By Hanna Noordzij
 
 #### Description:
-A python script to create new friend groups (vennegruppe).
+A Python script to create new friend groups (vennegruppe). 
 
-The concept “vennegruppe” is part of the anti-bullying program in Norway. The children are divided into groups of 4-5 children twice a year. The group is invited into the homes of the group members over the course of the semester. The children will be better acquainted with each other, as well as their parents and homes. This usually results in less bullying within and outside the classroom.
+The concept “vennegruppe” is part of the anti-bullying program in Norway. The children are divided into groups of 4-5 children twice a year. The group is invited into the homes of the group members over the course of the semester. The children will be better acquainted with each other, as well as their parents and homes. This usually results in less bullying within and outside the classroom. 
 
-This script creates (new) groups. Creating these groups manually so that every child will meet all the other classmates in the course of seven years is quite difficult. The script should make it easier to create these groups, with less instances of meeting the same child in the group over and over again.
+This script creates (new) groups. Creating these groups manually so that every child will meet all the other classmates in the course of seven years is quite difficult. The script should make it easier to create these groups, with less instances of meeting the same child in the group over and over again. 
+
+A **student.csv file is taken as input**, with the ***columns*** **name**, **gender** and **seen_students**. The student's **name** should be unique for the algorithm to work optimally, for example by adding the last name of the student. The **gender** of the student can be either F, M, X, or empty, whereby only F and M are used to calculate the girl/boy ratio within each group. The **seen_students** column can be empty or contain a comma separated list of other names the student has been in a group with previously.  
+
 
 #### Get Started:
 
-The program requires a csv file containing the students that will be grouped. The csv file should contain the columns, "name", "gender", and "seen_students". The last column can be empty or contain a list of comma seperated names of students they already met in previous groups.
+The program requires a csv file containing the students that will be grouped. The csv file should contain the columns; "name", "gender", and "seen_students". The last column can be empty or contain a list of comma seperated names of students they already met in previous groups. The name of the students should be unique, for example by adding (the first letter of) their last name.
+
 
 The student file is provided after the "-f" or "--file". The program can be used as follows:
 
     python project.py -f students.csv
 
+
 In case of unclarity, run:
 
     python project.py -h
 
-By default, the program creates a 100 new groups and keeps the best scoring group, based on an even girl/boy ratio and most novelty within the groups. However, iterating 10000 will create better groups:
+
+By default, the program creates 100 new groups and keeps the best scoring group, based on an even girl/boy ratio and most novelty within the groups. However, iterating 10000 will create better groups than the default 100, and can be set as follows:
 
     python project.py -f students.csv -i 10000
 
-In addition, the group size can be set using -m (--min) and -M (--max), and the output files for the groups (-o) and updated students (-s). See:
+
+In addition, the group size can be changed using -m (--min) and -M (--max), and the output files for the groups (-o) and updated students (-s) can be added. See:
+
 
 ### (Optional) Arguments
 -  -h, --help                       Show this help message and exit
