@@ -74,11 +74,11 @@ class Group:
             List of Student objects in the group.
     """
 
-    id = 1
+    _next_id = 1
 
     def __init__(self, students=[], ratio=0):
-        self.id = Group.id
-        Group.id += 1
+        self.id = Group._next_id
+        Group._next_id += 1
         self.students = students
         self.ratio = ratio
 
