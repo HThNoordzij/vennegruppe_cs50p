@@ -23,11 +23,11 @@ class Student:
             A list to track the students that the student has seen.
     """
 
-    id = 1
+    _next_id = 1
 
     def __init__(self, name, gender=None, seen_students=None):
-        self.id = Student.id
-        Student.id += 1
+        self.id = Student._next_id
+        Student._next_id += 1
         self.name = name
         self.gender = gender
         self.seen_students = seen_students if seen_students is not None else []
