@@ -21,6 +21,11 @@ class Student:
         Gender of the student, can be 'M', 'F', 'X', or None.
     seen_students : list
         A list to track the students that the student has seen.
+
+    Methods
+    -------
+    add_seen_student(student_name)
+        Appends the student name to the list of seen_students
     """
 
     _next_id = 1
@@ -75,12 +80,6 @@ class Group:
     ---------
     ratio : float
         Gender ratio of the group (F/M), ignoring X and None.
-
-    Methods
-    -------
-    calculate_ratio(self)
-        Automatically called when students are set.
-        Calculates ratio of F/M students within the group
     """
 
     _next_id = 1
@@ -102,13 +101,13 @@ class Group:
         if not isinstance(students, list):
             raise ValueError("Students must be a list")
         self._students = students
-        self._ratio = self.calculate_ratio()
+        self._ratio = self.__calculate_ratio()
 
     @property
     def ratio(self):
         return self._ratio
 
-    def calculate_ratio(self):
+    def __calculate_ratio(self):
         """Calculates the gender ratio of the group."""
         if not self.students:
             return 0
@@ -238,7 +237,23 @@ def parse_arguments(args):
 
 
 def read_students_from_csv(file_path):
-    """Reads students from a CSV file and returns a list of Student objects."""
+    """Reads students from a CSV file and returns a list of Student objects.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the csv file with students
+        Should contain the columns:
+            name : str
+            gender : F, M, X, or None
+            seen_students : empty or comma seperated list of names
+
+    Returns
+    -------
+    list
+        Containing Student objects
+    """
+
     students = []
     with open(file_path, "r") as file:
         reader = csv.DictReader(file)
@@ -259,7 +274,29 @@ def read_students_from_csv(file_path):
 
 
 def calculate_group_sizes(n_students, min, max):
-    """Calculates the sizes of groups based on the number of students and min/max constraints."""
+    """Calculates the sizes of groups based on the number of students and min/max constraints.
+
+    Parameters
+    ----------
+    n_students : int
+        Total number of students that need to be divided into groups
+    min : int
+        Minimum number of students per group
+    max : int
+        Maximum number of students per group
+
+    Returns
+    -------
+    list
+        An entry per group to be made, with an integer representing the group size
+
+    Raises
+    ------
+    ValueError
+        When the max is equal or smaller than the min parameter for group sizes
+        When the n_students is smaller than the min size of a group
+    """
+
     if max <= min:
         raise ValueError(
             "Maximum cannot be less than or equal to minimum number of students per group."
@@ -290,7 +327,22 @@ def calculate_group_sizes(n_students, min, max):
 
 
 def new_groups(students, group_sizes):
-    """Creates new groups of students based on the provided group sizes."""
+    """Creates new groups of students based on the provided group sizes.
+
+    Parameters
+    ----------
+    students : list
+        List of Student objects
+    group_sizes : list
+        List of integer values
+
+    Returns
+    -------
+    list
+        Containing Group objects
+        The Group objects are filled with Student objects
+    """
+
     random.shuffle(students)
     groups = []
     index = 0
@@ -303,7 +355,21 @@ def new_groups(students, group_sizes):
 
 
 def score_groups(groups):
-    """Score new groups based on gender ratio."""
+    """Score new groups based on gender ratio.
+
+    Parameters
+    ----------
+    groups : list
+        List of Group objects containing Student objects
+
+    Returns
+    -------
+    float
+        Representing the total score of the groups made, based on
+            The average female / male ratio of the groups
+            The number of students that have been grouped together before
+    """
+
     ratio_score = 0
     for group in groups:
         if group.ratio < 0.2 or group.ratio > 0.8:
@@ -325,7 +391,18 @@ def score_groups(groups):
 
 
 def update_seen_students(new):
-    """Updates the seen_students attribute for each student in the new groups."""
+    """Updates the seen_students attribute for each student in the new groups.
+
+    Parameters
+    ----------
+    new : list
+        List of Group objects containing Students objects
+
+    Returns
+    -------
+    None
+    """
+
     logger.info(
         "Add current group members to 'seen_student' attribute for each Student."
     )
@@ -338,7 +415,20 @@ def update_seen_students(new):
 
 
 def save_groups_to_csv(groups, file_path):
-    """Saves the groups to a CSV file."""
+    """Saves the groups to a CSV file.
+
+    Parameters
+    ----------
+    groups : list
+        List of Group objects containing Students objects
+    file_path : str
+        Path to the csv file for new groups (will be created or overwritten)
+
+    Returns
+    -------
+    None
+    """
+
     with open(file_path, "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Group ID", "Student Name", "Gender"])
@@ -348,7 +438,20 @@ def save_groups_to_csv(groups, file_path):
 
 
 def save_students_to_csv(students, file_path):
-    """Saves the students to a CSV file."""
+    """Saves the students to a CSV file.
+
+    Parameters
+    ----------
+    students : list
+        List of Students objects
+    file_path : str
+        Path to the csv file for updated students (will be created or overwritten)
+
+    Returns
+    -------
+    None
+    """
+
     with open(file_path, "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["name", "gender", "seen_students"])
