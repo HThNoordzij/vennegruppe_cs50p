@@ -135,14 +135,29 @@ def test_group_students_list():
     assert group.students[1] == student2
 
 
-def test_group_ratio_setter():
+def test_calculate_ratio():
     group = Group()
-    with pytest.raises(ValueError):
-        group.ratio = -0.1
-    with pytest.raises(ValueError):
-        group.ratio = 1.1
-    with pytest.raises(ValueError):
-        group.ratio = "half"
+    student1 = Student("Alice")
+    student1.gender = "F"
+    student2 = Student("Bob")
+    student2.gender = "M"
+    group.students = [student1, student2]
+    assert group.ratio == 0.5
+
+    student3 = Student("John")
+    student3.gender = "X"
+    group.students = [student1, student2, student3]
+    assert group.ratio == 0.5
+
+    student4 = Student("Y")
+    student4.gender = None
+    group.students = [student1, student2, student3, student4]
+    assert group.ratio == 0.5
+
+    student5 = Student("Gerdine")
+    student5.gender = "F"
+    group.students = [student1, student2, student3, student4, student5]
+    assert round(group.ratio, 2) == 0.67
 
 
 # Test cases for reading students from CSV

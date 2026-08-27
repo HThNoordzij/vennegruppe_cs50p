@@ -13,14 +13,14 @@ class Student:
 
     Attributes
     ----------
-        id : int
-            Unique identifier for the student.
-        name : str
-            Name of the student.
-        gender : str
-            Gender of the student, can be 'M', 'F', 'X', or None.
-        seen_students : list
-            A list to track the students that the student has seen.
+    id : int
+        Unique identifier for the student.
+    name : str
+        Name of the student.
+    gender : str
+        Gender of the student, can be 'M', 'F', 'X', or None.
+    seen_students : list
+        A list to track the students that the student has seen.
     """
 
     _next_id = 1
@@ -66,21 +66,29 @@ class Group:
 
     Attributes
     ----------
-        id : int
-            Unique identifier for the group.
-        ratio : float
-            Optional gender ratio for the group.
-        students : list
-            List of Student objects in the group.
+    id : int
+        Unique identifier for the group.
+    students : list
+        List of Student objects in the group.
+
+    Properties
+    ---------
+    ratio : float
+        Gender ratio of the group (F/M), ignoring X and None.
+
+    Methods
+    -------
+    calculate_ratio(self)
+        Automatically called when students are set.
+        Calculates ratio of F/M students within the group
     """
 
     _next_id = 1
 
-    def __init__(self, students=[], ratio=0):
+    def __init__(self, students=[]):
         self.id = Group._next_id
         Group._next_id += 1
         self.students = students
-        self.ratio = ratio
 
     def __str__(self):
         return f"Group {self.id}, ratio: {self.ratio:.2f}: {', '.join([str(s) for s in self.students])}"
@@ -99,12 +107,6 @@ class Group:
     @property
     def ratio(self):
         return self._ratio
-
-    @ratio.setter
-    def ratio(self, value):
-        if not isinstance(value, (int, float)) or value < 0 or value > 1:
-            raise ValueError("Ratio must be between 0 and 1")
-        self._ratio = value
 
     def calculate_ratio(self):
         """Calculates the gender ratio of the group."""
