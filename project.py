@@ -69,14 +69,14 @@ class Group:
     """
     A class to represent a group of students.
 
-    Attributes
+    Parameters
     ----------
     id : int
         Unique identifier for the group.
     students : list
         List of Student objects in the group.
 
-    Properties
+    Attributes
     ---------
     ratio : float
         Gender ratio of the group (F/M), ignoring X and None.
