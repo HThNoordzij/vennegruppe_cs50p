@@ -11,7 +11,7 @@ class Student:
     """
     A class to represent a student.
 
-    Attributes
+    Parameters
     ----------
     id : int
         Unique identifier for the student.
