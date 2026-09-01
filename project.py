@@ -376,6 +376,7 @@ def update_seen_students(new):
                 if student != other_student:
                     student.add_seen_student(other_student.name)
 
+
 def read_students_from_csv(file_path):
     """Reads students from a CSV file and returns a list of Student objects.   
 
