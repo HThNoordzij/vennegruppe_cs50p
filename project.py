@@ -412,28 +412,6 @@ def read_students_from_csv(file_path):
             )
     return students
 
-def save_groups_to_csv(groups, file_path):
-    """Saves the groups to a CSV file.
-
-    Parameters
-    ----------
-    groups : list
-        List of Group objects containing Students objects
-    file_path : str
-        Path to the csv file for new groups (will be created or overwritten)
-
-    Returns
-    -------
-    None
-    """
-
-    with open(file_path, "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Group ID", "Student Name", "Gender"])
-        for group in groups:
-            for student in group.students:
-                writer.writerow([group.id, student.name, student.gender])
-
 
 def save_students_to_csv(students, file_path):
     """Saves the students to a CSV file.
@@ -457,6 +435,29 @@ def save_students_to_csv(students, file_path):
             writer.writerow(
                 [student.name, student.gender, ",".join(student.seen_students)]
             )
+
+
+def save_groups_to_csv(groups, file_path):
+    """Saves the groups to a CSV file.
+
+    Parameters
+    ----------
+    groups : list
+        List of Group objects containing Students objects
+    file_path : str
+        Path to the csv file for new groups (will be created or overwritten)
+
+    Returns
+    -------
+    None
+    """
+
+    with open(file_path, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Group ID", "Student Name", "Gender"])
+        for group in groups:
+            for student in group.students:
+                writer.writerow([group.id, student.name, student.gender])
 
 
 if __name__ == "__main__":
