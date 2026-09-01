@@ -236,43 +236,6 @@ def parse_arguments(args):
     return parser.parse_args(args)
 
 
-def read_students_from_csv(file_path):
-    """Reads students from a CSV file and returns a list of Student objects.
-
-    Parameters
-    ----------
-    file_path : str
-        Path to the csv file with students
-        Should contain the columns:
-            name : str
-            gender : F, M, X, or None
-            seen_students : empty or comma seperated list of names
-
-    Returns
-    -------
-    list
-        Containing Student objects
-    """
-
-    students = []
-    with open(file_path, "r") as file:
-        reader = csv.DictReader(file)
-        logger.info(f"Reading students from {file_path}")
-        for row in reader:
-            students.append(
-                Student(
-                    name=row["name"],
-                    gender=row["gender"],
-                    seen_students=(
-                        row["seen_students"].split(",")
-                        if row["seen_students"]
-                        else None
-                    ),
-                )
-            )
-    return students
-
-
 def calculate_group_sizes(n_students, min, max):
     """Calculates the sizes of groups based on the number of students and min/max constraints.
 
@@ -413,6 +376,41 @@ def update_seen_students(new):
                 if student != other_student:
                     student.add_seen_student(other_student.name)
 
+def read_students_from_csv(file_path):
+    """Reads students from a CSV file and returns a list of Student objects.   
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the csv file with students
+        Should contain the columns:
+            name : str
+            gender : F, M, X, or None
+            seen_students : empty or comma seperated list of names
+
+    Returns
+    -------
+    list
+        Containing Student objects
+    """
+
+    students = []
+    with open(file_path, "r") as file:
+        reader = csv.DictReader(file)
+        logger.info(f"Reading students from {file_path}")
+        for row in reader:
+            students.append(
+                Student(
+                    name=row["name"],
+                    gender=row["gender"],
+                    seen_students=(
+                        row["seen_students"].split(",")
+                        if row["seen_students"]
+                        else None
+                    ),
+                )
+            )
+    return students
 
 def save_groups_to_csv(groups, file_path):
     """Saves the groups to a CSV file.
