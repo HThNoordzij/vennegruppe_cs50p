@@ -390,7 +390,8 @@ def score_groups(groups):
     float
         Representing the total score of the groups made, based on
             The average female / male ratio of the groups
-            The number of students that have been grouped together before
+            The number of students that have been grouped together
+            before
     """
 
     ratio_score = 0
@@ -403,7 +404,7 @@ def score_groups(groups):
             ratio_score -= 0.5
     ratio_score = ratio_score / len(groups) if groups else 0
 
-    """Score new groups based on how many students have seen each other before."""
+    #Score new groups based on how many students have seen each other before.
     seen_score = 0
     for group in groups:
         for student in group.students:
