@@ -202,7 +202,10 @@ def parse_arguments(args):
     """Parses command-line arguments."""
     parser = argparse.ArgumentParser(
         prog="Vennegruppe",
-        description="Create new groups of students based on previous groups and other parameters",
+        description=(
+            "Create new groups of students based on previous groups and "
+            "other parameters"
+        ),
     )
 
     parser.add_argument(
