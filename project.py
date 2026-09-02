@@ -472,7 +472,8 @@ def save_students_to_csv(students, file_path):
     students : list
         List of Students objects
     file_path : str
-        Path to the csv file for updated students (will be created or overwritten)
+        Path to the csv file for updated students (will be created or
+        overwritten)
 
     Returns
     -------
