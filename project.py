@@ -281,7 +281,7 @@ def calculate_group_sizes(n_students, min, max):
     n_students : int
         Total number of students that need to be divided into groups
     min : int
-        Minimum number of students per group
+        Minimum number of students per full group
     max : int
         Maximum number of students per group
 
@@ -295,6 +295,13 @@ def calculate_group_sizes(n_students, min, max):
     ValueError
         When the max is equal or smaller than the min parameter for group sizes
         When the n_students is smaller than the min size of a group
+
+    Notes
+    -----
+    The algorithm attemps to create groups such that each group has size
+    at least `min`, but there are combinations of parameters that can
+    result in some groups being smaller than `min`. For example,
+    calculate_group_sizes(7, 4, 6) will output [4, 3].
     """
 
     if max <= min:
