@@ -341,7 +341,9 @@ def create_new_groups(students, group_sizes):
     students : list
         List of Student objects
     group_sizes : list
-        List of integer values
+        List of integer values. Each entry corresponds to a group to be
+        created and each entry's integer value will be the corresponding
+        group's size.
 
     Returns
     -------
