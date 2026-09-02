@@ -90,7 +90,10 @@ class Group:
         self.students = students
 
     def __str__(self):
-        return f"Group {self.id}, ratio: {self.ratio:.2f}: {', '.join([str(s) for s in self.students])}"
+        return (
+            f"Group {self.id}, ratio: {self.ratio:.2f}: "
+            f"{', '.join([str(s) for s in self.students])}"
+        )
 
     @property
     def students(self):
