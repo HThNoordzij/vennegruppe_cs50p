@@ -101,13 +101,13 @@ class Group:
         if not isinstance(students, list):
             raise ValueError("Students must be a list")
         self._students = students
-        self._ratio = self.__calculate_ratio()
+        self._ratio = self._calculate_ratio()
 
     @property
     def ratio(self):
         return self._ratio
 
-    def __calculate_ratio(self):
+    def _calculate_ratio(self):
         """Calculates the gender ratio of the group."""
         if not self.students:
             return 0
