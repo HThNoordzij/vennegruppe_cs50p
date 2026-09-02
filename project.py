@@ -84,10 +84,10 @@ class Group:
 
     _next_id = 1
 
-    def __init__(self, students=[]):
+    def __init__(self, students=None):
         self.id = Group._next_id
         Group._next_id += 1
-        self.students = students
+        self.students = students if students is not None else []
 
     def __str__(self):
         return f"Group {self.id}, ratio: {self.ratio:.2f}: {', '.join([str(s) for s in self.students])}"
