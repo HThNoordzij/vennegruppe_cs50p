@@ -120,7 +120,8 @@ class Group:
         return female_count / total_count if total_count > 0 else 0
 
 
-def main(file, iterations, min_students, max_students, output_file, students_file):
+def main(file, iterations, min_students, max_students,
+         output_file, students_file):
     """Opening message."""
     logging.basicConfig(
         filename="vennegruppe.log",
@@ -141,21 +142,28 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
     logger.info(f"Read {len(students)} students from {file}")
 
     """Calculate group sizes."""
-    group_sizes = calculate_group_sizes(len(students), min_students, max_students)
+    group_sizes = calculate_group_sizes(len(students),
+                                        min_students,
+                                        max_students)
     logger.info(f"Number of groups: {len(group_sizes)}")
     logger.info(f"Group sizes: {group_sizes}\n")
 
     """Iteratively create and score groups, keeping the best scoring groups."""
-    logger.info(f"Randomizing the order of students, creating unique groups.\n")
+    logger.info(
+        f"Randomizing the order of students, creating unique groups.\n"
+    )
 
     logger.info("Scoring the girl/boy ratio per group.")
     logger.info("-2 points when ratio is less than 20/80.")
     logger.info("-1 points when ratio is less than 30/70.")
     logger.info("-0.5 points when ratio is less than 40/60.\n")
 
-    logger.info("Scoring groups based on previous seen students within one group.")
     logger.info(
-        "-1 point per previously seen student (aka -2, since it goes both ways).\n"
+        "Scoring groups based on previous seen students within one group."
+    )
+    logger.info(
+        "-1 point per previously seen student "
+        + "(aka -2, since it goes both ways).\n"
     )
 
     best_groups = None
@@ -168,7 +176,9 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
             best_score = score
             best_groups = groups
 
-    logger.info(f"Best score after {iterations} iterations: {best_score:.2f}\n")
+    logger.info(
+        f"Best score after {iterations} iterations: {best_score:.2f}\n"
+    )
     logger.info(f"Best groups:")
     for group in best_groups:
         logger.info(group)
