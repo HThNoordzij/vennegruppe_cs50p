@@ -291,7 +291,8 @@ def read_students_from_csv(file_path):
 
 
 def calculate_group_sizes(n_students, min, max):
-    """Calculates the sizes of groups based on the number of students and min/max constraints.
+    """Calculates the sizes of groups based on the number of students
+    and min/max constraints.
 
     Parameters
     ----------
@@ -305,26 +306,31 @@ def calculate_group_sizes(n_students, min, max):
     Returns
     -------
     list
-        An entry per group to be made, with an integer representing the group size
+        An entry per group to be made, with an integer representing the
+        group size
 
     Raises
     ------
     ValueError
-        When the max is equal or smaller than the min parameter for group sizes
+        When the max is equal or smaller than the min parameter for
+        group sizes.
         When the n_students is smaller than the min size of a group
     """
 
     if max <= min:
         raise ValueError(
-            "Maximum cannot be less than or equal to minimum number of students per group."
+            "Maximum cannot be less than or equal to minimum number of "
+            "students per group."
         )
     if n_students < min:
         raise ValueError(
-            "Number of students cannot be less than the minimum number of students per group."
+            "Number of students cannot be less than the minimum number of "
+            "students per group."
         )
 
     logger.info(
-        f"Calculating group sizes for {n_students} students, with {min} - {max} per group."
+        f"Calculating group sizes for {n_students} students, with "
+        f"{min} - {max} per group."
     )
 
     num_groups = n_students // min
