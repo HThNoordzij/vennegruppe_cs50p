@@ -448,7 +448,8 @@ def save_groups_to_csv(groups, file_path):
     groups : list
         List of Group objects containing Students objects
     file_path : str
-        Path to the csv file for new groups (will be created or overwritten)
+        Path to the csv file for new groups (will be created or
+        overwritten)
 
     Returns
     -------
