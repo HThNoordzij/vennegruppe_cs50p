@@ -253,7 +253,8 @@ def parse_arguments(args):
 
 
 def read_students_from_csv(file_path):
-    """Reads students from a CSV file and returns a list of Student objects.
+    """Reads students from a CSV file and returns a list of Student
+    objects.
 
     Parameters
     ----------
