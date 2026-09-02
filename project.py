@@ -158,7 +158,7 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
     best_groups = None
     best_score = float("-inf")
     for _ in range(iterations):
-        groups = new_groups(students, group_sizes)
+        groups = create_new_groups(students, group_sizes)
         score = score_groups(groups)
         if score > best_score:
             logger.info(f"New best score: {score:.2f}")
@@ -333,7 +333,7 @@ def calculate_group_sizes(n_students, min, max):
     return groups
 
 
-def new_groups(students, group_sizes):
+def create_new_groups(students, group_sizes):
     """Creates new groups of students based on the provided group sizes.
 
     Parameters
