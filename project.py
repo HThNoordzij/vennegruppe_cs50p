@@ -163,7 +163,7 @@ def main(file, iterations, min_students, max_students,
     )
     logger.info(
         "-1 point per previously seen student "
-        + "(aka -2, since it goes both ways).\n"
+        "(aka -2, since it goes both ways).\n"
     )
 
     best_groups = None
