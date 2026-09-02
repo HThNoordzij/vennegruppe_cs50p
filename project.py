@@ -352,12 +352,12 @@ def create_new_groups(students, group_sizes):
 
     random.shuffle(students)
     groups = []
-    index = 0
+    index_start = 0
     for size in group_sizes:
         group = Group()
-        group.students = students[index : index + size]
+        group.students = students[index_start : index_start + size]
         groups.append(group)
-        index += size
+        index_start += size
     return groups
 
 
