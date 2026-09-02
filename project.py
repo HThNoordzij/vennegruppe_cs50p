@@ -399,13 +399,13 @@ def score_groups(groups):
     return ratio_score + seen_score
 
 
-def update_seen_students(new):
-    """Updates the seen_students attribute for each student in the new groups.
+def update_seen_students(groups):
+    """Updates the seen_students attribute for each student in the groups.
 
     Parameters
     ----------
-    new : list
-        List of Group objects containing Students objects
+    groups : list
+        List of Group objects containing Student objects
 
     Returns
     -------
@@ -416,7 +416,7 @@ def update_seen_students(new):
         "Add current group members to 'seen_student' attribute for each Student."
     )
 
-    for group in new:
+    for group in groups:
         for student in group.students:
             for other_student in group.students:
                 if student != other_student:
