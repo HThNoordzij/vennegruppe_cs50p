@@ -415,7 +415,8 @@ def score_groups(groups):
 
 
 def update_seen_students(new):
-    """Updates the seen_students attribute for each student in the new groups.
+    """Updates the seen_students attribute for each student in the new
+    groups.
 
     Parameters
     ----------
@@ -428,7 +429,8 @@ def update_seen_students(new):
     """
 
     logger.info(
-        "Add current group members to 'seen_student' attribute for each Student."
+        "Add current group members to 'seen_student' attribute for "
+        "each Student."
     )
 
     for group in new:
