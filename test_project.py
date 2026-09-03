@@ -77,11 +77,14 @@ def test_student_name_setter():
 
 
 def test_student_gender_setter():
-    student = Student("Alice")
-    student.gender = "F"
-    assert student.gender == "F"
+    student1 = Student("Alice")
+    student1.gender = "F"
+    assert student1.gender == "F"
+    student2 = Student("Bob")
+    student2.gender = "m"
+    assert student2.gender == "M"
     with pytest.raises(ValueError):
-        student.gender = "Invalid"
+        student2.gender = "Invalid"
 
 
 def test_student_id_increment():

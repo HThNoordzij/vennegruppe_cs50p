@@ -56,9 +56,12 @@ class Student:
 
     @gender.setter
     def gender(self, gender):
-        if gender not in (None, "M", "F", "X"):
+        if not gender:
+            self._gender = None
+        elif gender.upper() in ("M", "F", "X"):
+            self._gender = gender.upper()
+        else:
             raise ValueError("Gender must be 'M', 'F', 'X', or None")
-        self._gender = gender
 
     def add_seen_student(self, student_name):
         """Adds a student to the seen_students list."""
