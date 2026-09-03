@@ -104,13 +104,13 @@ class Group:
         if not isinstance(students, list):
             raise ValueError("Students must be a list")
         self._students = students
-        self._ratio = self.__calculate_ratio()
+        self._ratio = self._calculate_ratio()
 
     @property
     def ratio(self):
         return self._ratio
 
-    def __calculate_ratio(self):
+    def _calculate_ratio(self):
         """Calculates the gender ratio of the group."""
         if not self.students:
             return 0
@@ -161,7 +161,7 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
     best_groups = None
     best_score = float("-inf")
     for _ in range(iterations):
-        groups = new_groups(students, group_sizes)
+        groups = create_new_groups(students, group_sizes)
         score = score_groups(groups)
         if score > best_score:
             logger.info(f"New best score: {score:.2f}")
@@ -247,7 +247,7 @@ def calculate_group_sizes(n_students, min, max):
     n_students : int
         Total number of students that need to be divided into groups
     min : int
-        Minimum number of students per group
+        Minimum number of students per full group
     max : int
         Maximum number of students per group
 
@@ -261,6 +261,13 @@ def calculate_group_sizes(n_students, min, max):
     ValueError
         When the max is equal or smaller than the min parameter for group sizes
         When the n_students is smaller than the min size of a group
+
+    Notes
+    -----
+    The algorithm attemps to create groups such that each group has size
+    at least `min`, but there are combinations of parameters that can
+    result in some groups being smaller than `min`. For example,
+    calculate_group_sizes(7, 4, 6) will output [4, 3].
     """
 
     if max <= min:
@@ -292,7 +299,7 @@ def calculate_group_sizes(n_students, min, max):
     return groups
 
 
-def new_groups(students, group_sizes):
+def create_new_groups(students, group_sizes):
     """Creates new groups of students based on the provided group sizes.
 
     Parameters
@@ -300,7 +307,9 @@ def new_groups(students, group_sizes):
     students : list
         List of Student objects
     group_sizes : list
-        List of integer values
+        List of integer values. Each entry corresponds to a group to be
+        created and each entry's integer value will be the corresponding
+        group's size.
 
     Returns
     -------
@@ -311,12 +320,12 @@ def new_groups(students, group_sizes):
 
     random.shuffle(students)
     groups = []
-    index = 0
+    index_start = 0
     for size in group_sizes:
         group = Group()
-        group.students = students[index : index + size]
+        group.students = students[index_start : index_start + size]
         groups.append(group)
-        index += size
+        index_start += size
     return groups
 
 
@@ -356,13 +365,13 @@ def score_groups(groups):
     return ratio_score + seen_score
 
 
-def update_seen_students(new):
-    """Updates the seen_students attribute for each student in the new groups.
+def update_seen_students(groups):
+    """Updates the seen_students attribute for each student in the groups.
 
     Parameters
     ----------
-    new : list
-        List of Group objects containing Students objects
+    groups : list
+        List of Group objects containing Student objects
 
     Returns
     -------
@@ -373,7 +382,7 @@ def update_seen_students(new):
         "Add current group members to 'seen_student' attribute for each Student."
     )
 
-    for group in new:
+    for group in groups:
         for student in group.students:
             for other_student in group.students:
                 if student != other_student:
