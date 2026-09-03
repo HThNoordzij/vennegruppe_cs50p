@@ -5,7 +5,7 @@ from project import (
     Group,
     read_students_from_csv,
     calculate_group_sizes,
-    new_groups,
+    create_new_groups,
     score_groups,
     save_groups_to_csv,
     save_students_to_csv,
@@ -219,17 +219,17 @@ def test_calculate_group_sizes_invalid_cases():
         calculate_group_sizes(3, 4, 6)  # students < min
 
 
-# Test cases for new_groups function
-def test_new_groups():
+# Test cases for create_new_groups function
+def test_create_new_groups():
     students = [Student("Alice"), Student("Bob"), Student("Charlie"), Student("Dylan")]
     group_sizes = [2, 2]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
     assert len(groups) == 2
     assert len(groups[0].students) == 2
     assert len(groups[1].students) == 2
 
 
-def test_new_groups_with_remaining_students():
+def test_create_new_groups_with_remaining_students():
     students = [
         Student("Alice"),
         Student("Bob"),
@@ -238,7 +238,7 @@ def test_new_groups_with_remaining_students():
         Student("Eli"),
     ]
     group_sizes = [3, 2]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
     assert len(groups) == 2
     assert len(groups[0].students) == 3
     assert len(groups[1].students) == 2
@@ -253,7 +253,7 @@ def test_score_groups():
         Student("Dylan", "M"),
     ]
     group_sizes = [2, 2]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
     score = score_groups(groups)
     assert isinstance(score, float)
 
@@ -266,7 +266,7 @@ def test_score_groups_edge_cases():
         Student("Dylan", "M"),
     ]
     group_sizes = [4]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
     score = score_groups(groups)
     assert score == 0
 
@@ -277,7 +277,7 @@ def test_score_groups_edge_cases():
         Student("Dylan", "F"),
     ]
     group_sizes = [4]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
     score = score_groups(groups)
     assert score < 0
 
@@ -291,7 +291,7 @@ def test_save_groups_to_csv(tmp_path):
         Student("Dylan", "M"),
     ]
     group_sizes = [2, 2]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
 
     csv_file = tmp_path / "new_groups.csv"
     save_groups_to_csv(groups, str(csv_file))
@@ -331,7 +331,7 @@ def test_update_seen_students():
         Student("Dylan", "M"),
     ]
     group_sizes = [2, 2]
-    groups = new_groups(students, group_sizes)
+    groups = create_new_groups(students, group_sizes)
 
     update_seen_students(groups)
 
