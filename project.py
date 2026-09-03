@@ -93,7 +93,10 @@ class Group:
         self.students = students if students is not None else []
 
     def __str__(self):
-        return f"Group {self.id}, ratio: {self.ratio:.2f}: {', '.join([str(s) for s in self.students])}"
+        return (
+            f"Group {self.id}, ratio: {self.ratio:.2f}: "
+            f"{', '.join([str(s) for s in self.students])}"
+        )
 
     @property
     def students(self):
@@ -120,7 +123,8 @@ class Group:
         return female_count / total_count if total_count > 0 else 0
 
 
-def main(file, iterations, min_students, max_students, output_file, students_file):
+def main(file, iterations, min_students, max_students, 
+         output_file, students_file):
     """Opening message."""
     logging.basicConfig(
         filename="vennegruppe.log",
@@ -141,21 +145,27 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
     logger.info(f"Read {len(students)} students from {file}")
 
     """Calculate group sizes."""
-    group_sizes = calculate_group_sizes(len(students), min_students, max_students)
+    group_sizes = calculate_group_sizes(len(students), 
+                                        min_students, 
+                                        max_students)
     logger.info(f"Number of groups: {len(group_sizes)}")
     logger.info(f"Group sizes: {group_sizes}\n")
 
     """Iteratively create and score groups, keeping the best scoring groups."""
-    logger.info(f"Randomizing the order of students, creating unique groups.\n")
+    logger.info(
+        f"Randomizing the order of students, creating unique groups.\n"
+    )
 
     logger.info("Scoring the girl/boy ratio per group.")
     logger.info("-2 points when ratio is less than 20/80.")
     logger.info("-1 points when ratio is less than 30/70.")
     logger.info("-0.5 points when ratio is less than 40/60.\n")
 
-    logger.info("Scoring groups based on previous seen students within one group.")
     logger.info(
-        "-1 point per previously seen student (aka -2, since it goes both ways).\n"
+        "Scoring groups based on previous seen students within one group.")
+    logger.info(
+        "-1 point per previously seen student "
+        "(aka -2, since it goes both ways).\n"
     )
 
     best_groups = None
@@ -168,7 +178,9 @@ def main(file, iterations, min_students, max_students, output_file, students_fil
             best_score = score
             best_groups = groups
 
-    logger.info(f"Best score after {iterations} iterations: {best_score:.2f}\n")
+    logger.info(
+        f"Best score after {iterations} iterations: {best_score:.2f}\n"
+    )
     logger.info(f"Best groups:")
     for group in best_groups:
         logger.info(group)
@@ -192,7 +204,10 @@ def parse_arguments(args):
     """Parses command-line arguments."""
     parser = argparse.ArgumentParser(
         prog="Vennegruppe",
-        description="Create new groups of students based on previous groups and other parameters",
+        description=(
+            "Create new groups of students based on previous groups and "
+            "other parameters"
+        ),
     )
 
     parser.add_argument(
@@ -240,7 +255,8 @@ def parse_arguments(args):
 
 
 def calculate_group_sizes(n_students, min, max):
-    """Calculates the sizes of groups based on the number of students and min/max constraints.
+    """Calculates the sizes of groups based on the number of students 
+    and min/max constraints.
 
     Parameters
     ----------
@@ -254,12 +270,14 @@ def calculate_group_sizes(n_students, min, max):
     Returns
     -------
     list
-        An entry per group to be made, with an integer representing the group size
+        An entry per group to be made, with an integer representing the 
+        group size
 
     Raises
     ------
     ValueError
-        When the max is equal or smaller than the min parameter for group sizes
+        When the max is equal or smaller than the min parameter for 
+        group sizes.
         When the n_students is smaller than the min size of a group
 
     Notes
@@ -272,15 +290,18 @@ def calculate_group_sizes(n_students, min, max):
 
     if max <= min:
         raise ValueError(
-            "Maximum cannot be less than or equal to minimum number of students per group."
+            "Maximum cannot be less than or equal to minimum number of "
+            "students per group."
         )
     if n_students < min:
         raise ValueError(
-            "Number of students cannot be less than the minimum number of students per group."
+            "Number of students cannot be less than the minimum number of "
+            "students per group."
         )
 
     logger.info(
-        f"Calculating group sizes for {n_students} students, with {min} - {max} per group."
+        f"Calculating group sizes for {n_students} students, with "
+        f"{min} - {max} per group."
     )
 
     num_groups = n_students // min
@@ -342,7 +363,8 @@ def score_groups(groups):
     float
         Representing the total score of the groups made, based on
             The average female / male ratio of the groups
-            The number of students that have been grouped together before
+            The number of students that have been grouped together 
+            before
     """
 
     ratio_score = 0
@@ -355,7 +377,8 @@ def score_groups(groups):
             ratio_score -= 0.5
     ratio_score = ratio_score / len(groups) if groups else 0
 
-    """Score new groups based on how many students have seen each other before."""
+    """Score new groups based on how many students have seen each other 
+    before."""
     seen_score = 0
     for group in groups:
         for student in group.students:
@@ -366,7 +389,8 @@ def score_groups(groups):
 
 
 def update_seen_students(groups):
-    """Updates the seen_students attribute for each student in the groups.
+    """Updates the seen_students attribute for each student in the 
+    groups.
 
     Parameters
     ----------
@@ -379,7 +403,8 @@ def update_seen_students(groups):
     """
 
     logger.info(
-        "Add current group members to 'seen_student' attribute for each Student."
+        "Add current group members to 'seen_student' attribute for "
+        "each Student."
     )
 
     for group in groups:
@@ -390,7 +415,8 @@ def update_seen_students(groups):
 
 
 def read_students_from_csv(file_path):
-    """Reads students from a CSV file and returns a list of Student objects.   
+    """Reads students from a CSV file and returns a list of Student 
+    objects.   
 
     Parameters
     ----------
@@ -434,7 +460,8 @@ def save_students_to_csv(students, file_path):
     students : list
         List of Students objects
     file_path : str
-        Path to the csv file for updated students (will be created or overwritten)
+        Path to the csv file for updated students (will be created or 
+        overwritten)
 
     Returns
     -------
@@ -458,7 +485,8 @@ def save_groups_to_csv(groups, file_path):
     groups : list
         List of Group objects containing Students objects
     file_path : str
-        Path to the csv file for new groups (will be created or overwritten)
+        Path to the csv file for new groups (will be created or 
+        overwritten)
 
     Returns
     -------

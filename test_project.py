@@ -121,7 +121,8 @@ def test_group_str():
     group.students.append(student2)
     assert (
         str(group)
-        == f"Group {group.id}, ratio: {group.ratio:.2f}: Alice ({student1.gender}), Bob ({student2.gender})"
+        == (f"Group {group.id}, ratio: {group.ratio:.2f}: Alice ("
+            f"{student1.gender}), Bob ({student2.gender})")
     )
 
 
@@ -170,7 +171,9 @@ def test_calculate_ratio():
 def test_read_students_from_csv(tmp_path):
     # Create a temporary CSV file
     csv_file = tmp_path / "students.csv"
-    csv_file.write_text("name,gender,seen_students\nAlice,F,\nBob,M,\nCharlie,X,\n")
+    csv_file.write_text(
+        "name,gender,seen_students\nAlice,F,\nBob,M,\nCharlie,X,\n"
+    )
 
     students = read_students_from_csv(str(csv_file))
     assert len(students) == 3
@@ -221,7 +224,8 @@ def test_calculate_group_sizes_invalid_cases():
 
 # Test cases for create_new_groups function
 def test_create_new_groups():
-    students = [Student("Alice"), Student("Bob"), Student("Charlie"), Student("Dylan")]
+    students = [Student("Alice"), Student("Bob"), Student("Charlie"), 
+                Student("Dylan")]
     group_sizes = [2, 2]
     groups = create_new_groups(students, group_sizes)
     assert len(groups) == 2
