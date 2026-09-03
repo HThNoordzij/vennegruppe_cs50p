@@ -11,7 +11,7 @@ class Student:
     """
     A class to represent a student.
 
-    Attributes
+    Parameters
     ----------
     id : int
         Unique identifier for the student.
@@ -72,14 +72,14 @@ class Group:
     """
     A class to represent a group of students.
 
-    Attributes
+    Parameters
     ----------
     id : int
         Unique identifier for the group.
     students : list
         List of Student objects in the group.
 
-    Properties
+    Attributes
     ---------
     ratio : float
         Gender ratio of the group (F/M), ignoring X and None.
@@ -239,43 +239,6 @@ def parse_arguments(args):
     return parser.parse_args(args)
 
 
-def read_students_from_csv(file_path):
-    """Reads students from a CSV file and returns a list of Student objects.
-
-    Parameters
-    ----------
-    file_path : str
-        Path to the csv file with students
-        Should contain the columns:
-            name : str
-            gender : F, M, X, or None
-            seen_students : empty or comma seperated list of names
-
-    Returns
-    -------
-    list
-        Containing Student objects
-    """
-
-    students = []
-    with open(file_path, "r") as file:
-        reader = csv.DictReader(file)
-        logger.info(f"Reading students from {file_path}")
-        for row in reader:
-            students.append(
-                Student(
-                    name=row["name"],
-                    gender=row["gender"],
-                    seen_students=(
-                        row["seen_students"].split(",")
-                        if row["seen_students"]
-                        else None
-                    ),
-                )
-            )
-    return students
-
-
 def calculate_group_sizes(n_students, min, max):
     """Calculates the sizes of groups based on the number of students and min/max constraints.
 
@@ -417,27 +380,41 @@ def update_seen_students(new):
                     student.add_seen_student(other_student.name)
 
 
-def save_groups_to_csv(groups, file_path):
-    """Saves the groups to a CSV file.
+def read_students_from_csv(file_path):
+    """Reads students from a CSV file and returns a list of Student objects.   
 
     Parameters
     ----------
-    groups : list
-        List of Group objects containing Students objects
     file_path : str
-        Path to the csv file for new groups (will be created or overwritten)
+        Path to the csv file with students
+        Should contain the columns:
+            name : str
+            gender : F, M, X, or None
+            seen_students : empty or comma seperated list of names
 
     Returns
     -------
-    None
+    list
+        Containing Student objects
     """
 
-    with open(file_path, "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Group ID", "Student Name", "Gender"])
-        for group in groups:
-            for student in group.students:
-                writer.writerow([group.id, student.name, student.gender])
+    students = []
+    with open(file_path, "r") as file:
+        reader = csv.DictReader(file)
+        logger.info(f"Reading students from {file_path}")
+        for row in reader:
+            students.append(
+                Student(
+                    name=row["name"],
+                    gender=row["gender"],
+                    seen_students=(
+                        row["seen_students"].split(",")
+                        if row["seen_students"]
+                        else None
+                    ),
+                )
+            )
+    return students
 
 
 def save_students_to_csv(students, file_path):
@@ -462,6 +439,29 @@ def save_students_to_csv(students, file_path):
             writer.writerow(
                 [student.name, student.gender, ",".join(student.seen_students)]
             )
+
+
+def save_groups_to_csv(groups, file_path):
+    """Saves the groups to a CSV file.
+
+    Parameters
+    ----------
+    groups : list
+        List of Group objects containing Students objects
+    file_path : str
+        Path to the csv file for new groups (will be created or overwritten)
+
+    Returns
+    -------
+    None
+    """
+
+    with open(file_path, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Group ID", "Student Name", "Gender"])
+        for group in groups:
+            for student in group.students:
+                writer.writerow([group.id, student.name, student.gender])
 
 
 if __name__ == "__main__":
