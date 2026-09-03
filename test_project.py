@@ -83,6 +83,9 @@ def test_student_gender_setter():
     student2 = Student("Bob")
     student2.gender = "m"
     assert student2.gender == "M"
+    student3 = Student("Charlie")
+    student3.gender = None
+    assert student3.gender == None
     with pytest.raises(ValueError):
         student2.gender = "Invalid"
 
