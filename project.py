@@ -65,7 +65,8 @@ class Student:
 
     def add_seen_student(self, student_name):
         """Adds a student to the seen_students list."""
-        self.seen_students.append(student_name)
+        if student_name not in self.seen_students:
+            self.seen_students.append(student_name)
 
 
 class Group:

@@ -107,6 +107,12 @@ def test_student_seen_students():
     student.add_seen_student("Bob")
     assert "Bob" in student.seen_students
 
+    student.add_seen_student("Charlie")
+    assert student.seen_students == ["Bob", "Charlie"]
+
+    student.add_seen_student("Bob")
+    assert student.seen_students == ["Bob", "Charlie"]
+
 
 def test_group_creation():
     group = Group()
